@@ -15,7 +15,7 @@ public class Main {
 		// attempt at opening a window
 		Frame app = new Frame("Click me!");
 		app.setPreferredSize(new Dimension(600, 400));
-		//app.addWindowListener(new Closer());
+		app.addWindowListener(new Closer());
 		app.pack();
 		app.setVisible(true);
 
