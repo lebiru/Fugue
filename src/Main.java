@@ -3,7 +3,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 
-
 public class Main {
 	// Katrina's test
 	/**
@@ -18,11 +17,14 @@ public class Main {
 		
 		// initialize window
 		Frame app = new Frame("Click me!");
-		app.setPreferredSize(new Dimension(width, height));
 		app.addWindowListener(new Closer());
-		app.pack();
-		app.setVisible(true);
-		app.setBackground(Color.white);
+        ClickyCanvas c = new ClickyCanvas();
+		c.setPreferredSize(new Dimension(width, height));
+		app.add(c);
+        app.pack();
+        app.setVisible(true);
+		c.setVisible(true);
+		c.setBackground(Color.white);
 
 	}
 
