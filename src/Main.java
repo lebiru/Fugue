@@ -10,6 +10,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		System.out.println("Hello world!");
+		System.out.println("Testing using EGit");
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
