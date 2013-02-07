@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
+@SuppressWarnings("serial")
 public class ClickyCanvas extends Canvas {
 	/**
 	 * 
