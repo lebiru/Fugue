@@ -15,6 +15,11 @@ public class Main {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
+
+
+		Graph g = new Graph();
+		g.testFillGraph(5,2,5);
+		g.textDisplay();
 		
 		// initialize window
 		Frame app = new Frame("Click me!");
