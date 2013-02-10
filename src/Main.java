@@ -8,7 +8,9 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Hello world!");
+		System.out.println("Fugue: Visualized Java Debugger");
+		
+		
 		
 		Graph g = new Graph();
 		g.testFillGraph(5,2,5);
