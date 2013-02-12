@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 
 public class Graph {
 
 	ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+	HashMap<String, Integer> id_chart = new HashMap<String, Integer>();
+	ArrayList<Edges> edges = new ArrayList<Edges>();
 	
 	public Graph()
 	{
@@ -74,7 +77,8 @@ public class Graph {
 	/*
 	 * Displays the graph on the console
 	 */
-	public void textDisplay() {
+	public void displayGraph() 
+	{
 		
 		for(int i = 0; i < graph.size(); i++)
 		{
@@ -83,9 +87,37 @@ public class Graph {
 			System.out.println();
 		}
 		
+	}
+	
+	public void testFillEdges(Graph g)
+	{
+		int id = 1; //Start id assignment at 1, 0 is reserved for blank id
 		
+		for(int i = 0; i < g.getGraph().size(); i++)
+		{
+			
+			
+			for(int j = 0; j < g.getGraph().get(i).size(); j++)
+			{
+				Edges e = new Edges(id, i, g.getEdges(i).get(j));
+				edges.add(e);
+				id += 1;
+			}
+			
+		}
 		
 	}
+	
+	public void displayEdges(Graph g)
+	{
+		
+		for(Edges e : edges)
+		{
+			e.displayEdge();
+		}
+	}
+	
+	
 	
 	
 	
