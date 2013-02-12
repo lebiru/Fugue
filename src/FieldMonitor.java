@@ -28,11 +28,12 @@ public class FieldMonitor {
 			System.out.println(fc);
 			for(int j = 1; j < fc; j++) {
 				List<LocalVariable> vv = sf.get(j).visibleVariables();
-				System.out.println("Working ");
+
 				for (int k = 0; k < vv.size(); k++) {
 					
 					System.out.println("Type: " + vv.get(k).type());
 					System.out.println("Name: " + vv.get(k).name());
+					System.out.println("typename: " + vv.get(k).typeName());
 				}
 			}
 		}
