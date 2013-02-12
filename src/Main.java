@@ -19,15 +19,23 @@ public class Main {
 		
 		FieldMonitor m = new FieldMonitor();
 		m.monitorSys(8686);
-		//Graph g = new Graph();
-		//g.testFillGraph(5,2,5);
-		//g.testFillEdges(g);
-		//g.displayGraph();
-		//g.displayEdges(g);
+
+	
+
+		Graph g = new Graph();
+
+		g.testFillGraph(100,10,20);
+		g.displayGraph();
+
+		g.testFillGraph(5,2,5);
+		g.testFillEdges(g);
+		g.displayGraph();
+		g.displayEdges(g);
 		
 		// call function to draw graph
-		//View v = new View();
-		//v.drawMe(g);
+		View v = new View();
+		v.drawMe(g);
+
 		
 	}
 	
