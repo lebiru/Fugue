@@ -34,11 +34,14 @@ public class FieldMonitor {
 					System.out.println("Type: " + vv.get(k).type());
 					System.out.println("Name: " + vv.get(k).name());
 					System.out.println("typename: " + vv.get(k).typeName());
-				}
+					System.out.println("Signature Type  " + vv.get(k).type().signature());
+				} 
 			}
 		}
+		Runtime.getRuntime().exit(8686);
 		}
 
+		
 		
 		catch (IncompatibleThreadStateException e) {
 			e.printStackTrace();

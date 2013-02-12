@@ -16,17 +16,17 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotLoadedException {
 		System.out.println("Fugue: Visualized Java Debugger");
 		
+//		Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
+//		Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8686,server=y,suspend=y InterestingQueue").waitFor();
+//		FieldMonitor m = new FieldMonitor();	
+//
+//
+//		FieldMonitor.monitorSys(8686);
 		
-		FieldMonitor m = new FieldMonitor();
-		m.monitorSys(8686);
-
-	
-
 		Graph g = new Graph();
-
 		g.testFillGraph(100,10,20);
 		g.displayGraph();
-
+		System.out.println("Hello");
 		g.testFillGraph(5,2,5);
 		g.testFillEdges(g);
 		g.displayGraph();
