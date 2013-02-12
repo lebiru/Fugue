@@ -18,7 +18,7 @@ public class Main {
 
 
 		Graph g = new Graph();
-		g.testFillGraph(5,2,5);
+		g.testFillGraph(100,10,20);
 		g.textDisplay();
 		
 		// initialize window
