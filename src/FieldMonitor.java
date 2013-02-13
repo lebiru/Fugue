@@ -38,7 +38,6 @@ public class FieldMonitor {
 				} 
 			}
 		}
-		Runtime.getRuntime().exit(8686);
 		}
 
 		
@@ -55,7 +54,7 @@ public class FieldMonitor {
 	
 		
 		
-		for (ReferenceType refType : referenceTypes) {
+/*		for (ReferenceType refType : referenceTypes) {
 			addFieldWatch(vm, refType);
 		}
 		// watch for loaded classes
@@ -88,7 +87,9 @@ public class FieldMonitor {
 				
 			}
 			eventSet.resume();
-		}}
+		}*/
+		
+	}
 
 	/** Watch all classes of name "Test" */
 	private static void addClassWatch(VirtualMachine vm) {
