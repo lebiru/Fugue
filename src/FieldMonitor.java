@@ -9,7 +9,7 @@ import com.sun.jdi.request.*;
 public class FieldMonitor {
 
 	public static final String CLASS_NAME = "InterestingQueue";
-	public static final String FIELD_NAME = "tail";
+	public static final String FIELD_NAME = "i";
 
 	public static void monitorSys(int dataport) throws IOException,
 			InterruptedException, ClassNotLoadedException {
@@ -34,10 +34,20 @@ public class FieldMonitor {
 					System.out.println("Type: " + vv.get(k).type());
 					System.out.println("Name: " + vv.get(k).name());
 					System.out.println("typename: " + vv.get(k).typeName());
-					System.out.println("Signature Type  " + vv.get(k).type().signature());
+					System.out.println("Signature Type  " + vv.get(k).virtualMachine().toString());
+					
+					
+				
+					
+					
+
 				} 
+			
 			}
+		
 		}
+		
+		
 		}
 
 		
@@ -54,7 +64,7 @@ public class FieldMonitor {
 	
 		
 		
-/*		for (ReferenceType refType : referenceTypes) {
+		/*for (ReferenceType refType : referenceTypes) {
 			addFieldWatch(vm, refType);
 		}
 		// watch for loaded classes
