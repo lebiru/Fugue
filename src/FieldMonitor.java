@@ -8,8 +8,8 @@ import com.sun.jdi.request.*;
 
 public class FieldMonitor {
 
-	public static final String CLASS_NAME = "Test";
-	public static final String FIELD_NAME = "foo";
+	public static final String CLASS_NAME = "InterestingQueue";
+	public static final String FIELD_NAME = "tail";
 
 	public static void monitorSys(int dataport) throws IOException,
 			InterruptedException, ClassNotLoadedException {

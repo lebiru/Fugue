@@ -17,7 +17,7 @@ public class Main {
 		System.out.println("Fugue: Visualized Java Debugger");
 		
 		Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
-		Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8686,server=y,suspend=y InterestingQueue").waitFor();
+		Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8686,server=y,suspend=n InterestingQueue").waitFor();
 		
 		try {
 		    Thread.sleep(100);
