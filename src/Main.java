@@ -27,14 +27,17 @@ public class Main {
 		
 		FieldMonitor m = new FieldMonitor();	
 		FieldMonitor.monitorSys(8686);
+		
+		//Graph test
 		Graph g = new Graph();
-		g.testFillGraph(100,10,20);
+		g.testFillGraph(20,10,20);
 		g.displayGraph();
-		System.out.println("Hello");
-		g.testFillGraph(5,2,5);
+		
 		g.testFillEdges(g);
-		g.displayGraph();
-		g.displayEdges(g);
+		g.testFillVertexes(g);
+		
+		g.displayEdges();
+		g.displayVertexes();
 		
 		// call function to draw graph
 		View v = new View();
