@@ -7,6 +7,11 @@ public class Vertex {
 	int id = 0;
 	String name = "";
 	
+	public Vertex()
+	{
+		
+	}
+	
 	public Vertex(int id, String name)
 	{
 		this.id = id;
@@ -21,11 +26,6 @@ public class Vertex {
 	public String getName()
 	{
 		return this.name;
-	}
-
-	public void setID(int id)
-	{
-		this.id = id;
 	}
 	
 	public int getID()

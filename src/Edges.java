@@ -7,12 +7,12 @@
 
 public class Edges {
 	
-	int source = 0;
-	int destination = 0;
+	Vertex source = new Vertex();
+	Vertex destination = new Vertex();
 	int id = 0;
 	
 	
-	public Edges(int id, int source, int destination)
+	public Edges(int id, Vertex source, Vertex destination)
 	{
 		this.source = source;
 		this.destination = destination;
@@ -24,12 +24,12 @@ public class Edges {
 		
 	}
 
-	public void setSource(int source)
+	public void setSource(Vertex source)
 	{
 		this.source = source;
 	}
 	
-	public void setDestination(int destination)
+	public void setDestination(Vertex destination)
 	{
 		this.destination = destination;
 	}
@@ -40,30 +40,30 @@ public class Edges {
 		this.id = id;
 	}
 	
-	public int getSource()
+	public Vertex getSource()
 	{
 		return this.source;
 	}
 	
-	public int getDestination()
+	public Vertex getDestination()
 	{
 		return this.destination;
 	}
 	
-	public int getid()
+	public int getID()
 	{
 		return this.id;
 	}
 	
 	public void displayEdge()
 	{
-		System.out.println("Edge: " + this.id + ", Source: " + this.source + ", Destination: " + this.destination);
+		System.out.println("Edge: " + this.id + ", Source: " + this.source.name + ", Destination: " + this.destination.name);
 	}
 	
 	public void resetEdge()
 	{
-		this.source = 0;
-		this.destination = 0;
+		this.source = new Vertex();
+		this.destination = new Vertex();
 		this.id = 0;
 		
 	}
