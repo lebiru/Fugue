@@ -36,8 +36,8 @@ public class Main {
 //		g.testFillEdges(g);
 //		g.testFillVertexes(g);
 		
-		g.displayEdges();
-		g.displayVertexes();
+		//g.displayEdges();
+		//g.displayVertexes();
 		
 		// call function to draw graph
 		View v = new View();

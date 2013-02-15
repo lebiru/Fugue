@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 
 
 public class Graph {
 
-	HashMap<Integer, HashMap<Integer, Integer>> graph = new HashMap<Integer, HashMap<Integer, Integer>>();
+	HashMap<Integer, ArrayList<Integer>> graph = new HashMap<Integer, ArrayList<Integer>>();
 	
 	HashMap<Integer, Vertex> vertexes = new HashMap<Integer, Vertex>();
 	HashMap<Integer, Edges> edges = new HashMap<Integer, Edges>();
@@ -20,7 +21,7 @@ public class Graph {
 		//working on it	
 	}
 
-	public HashMap<Integer, HashMap<Integer, Integer>> getGraph()
+	public HashMap<Integer, ArrayList<Integer>> getGraph()
 	{
 		return this.graph;
 	}
@@ -65,12 +66,84 @@ public class Graph {
 	public void staticTestFillGraph()
 	{
 		
-		ArrayList<Integer> source = new ArrayList<Integer>();
-		ArrayList<Integer> destination = new ArrayList<Integer>(3);
-
+		ArrayList<Integer> one = new ArrayList<Integer>();
+		ArrayList<Integer> two = new ArrayList<Integer>();
+		ArrayList<Integer> three = new ArrayList<Integer>();
+		ArrayList<Integer> four = new ArrayList<Integer>();
 		
-
-
+		one.add(2);
+		one.add(1);
+		
+		two.add(3);
+		
+		three.add(4);
+		
+		four.add(3);
+		four.add(2);
+		
+		graph.put(1, one);
+		graph.put(2, two);
+		graph.put(3, three);
+		graph.put(4, four);
+		
+		
+		
+		
+//		int[] sourceArray =      {3,4,8,2,5,7,4,8,3,1};
+//		int[] destinationArray = {9,1,2,4,7,8,3,6,8,5};
+//		
+//		for(int i : sourceArray)
+//		{
+//			if(!graph.containsKey(sourceArray[i]))
+//			{
+//				graph.put(sourceArray[i], new HashMap<Integer, Integer>());
+//			}
+//			
+//			graph.get(sourceArray[i]).put(sourceArray[i], destinationArray[i]);
+//			
+//			if(!graph.containsKey(destinationArray[i]))
+//			{
+//				graph.put(sourceArray[i], new HashMap<Integer, Integer>());
+//			}
+//			
+//		}
+//		
+//		HashMap<Integer, Integer>
+		
+		
+		
+//		ArrayList<Integer> source = new ArrayList<Integer>();
+//		ArrayList<Integer> destination = new ArrayList<Integer>();
+//		
+//		//Putting sourceArray -> source & destinationArray -> destination
+//		for(int i : sourceArray)
+//		{
+//			source.add(sourceArray[i]);
+//			destination.add(destinationArray[i]);
+//		}
+//		
+//		
+//		//Adding distinct sources to HashMap sources
+//		for(Integer i : source)
+//		{
+//			if(!vertexes.containsKey(i))
+//			{
+//				vertexes.put(source.get(i), new Vertex(source.get(i)));
+//			}
+//			
+//		}
+//		
+//		for(Integer i : destination)
+//		{
+//			
+//			if(!vertexes.containsKey(i))
+//			{
+//				vertexes.put(destination.get(i), new Vertex(destination.get(i)));
+//			}
+//			
+//		}
+		
+		
 	}
 
 	/*
@@ -79,11 +152,11 @@ public class Graph {
 	public void displayGraph() 
 	{
 
-		for(int i = 0; i < graph.size(); i++)
+		for(Entry<Integer, ArrayList<Integer>> g : graph.entrySet())
 		{
-			System.out.print("Vertex " + i + " points to: ");
-			System.out.print(graph.get(i));
-			System.out.println();
+			int key = g.getKey();
+			ArrayList<Integer> value = g.getValue();
+			System.out.println("Vertex: " + key + ": [" + value.toString() + "]");
 		}
 
 	}

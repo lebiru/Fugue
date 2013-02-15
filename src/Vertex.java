@@ -12,6 +12,11 @@ public class Vertex {
 		
 	}
 	
+	public Vertex(int id)
+	{
+		this.id = id;
+	}
+	
 	public Vertex(int id, String name)
 	{
 		this.id = id;

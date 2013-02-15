@@ -19,6 +19,11 @@ public class Edges {
 		this.id = id;
 	}
 	
+	public Edges(int id)
+	{
+		this.id = id;
+	}
+	
 	public Edges()
 	{
 		
