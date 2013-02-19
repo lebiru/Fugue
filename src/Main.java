@@ -57,7 +57,7 @@ public class Main {
 
 		
 		// call function to draw graph
-		ClickyCanvas c = new ClickyCanvas();
+		ClickyCanvas c = new ClickyCanvas(g);
 		
 		app.addWindowListener(new Closer());
 		c.setPreferredSize(new Dimension(width, height));
