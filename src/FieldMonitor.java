@@ -12,34 +12,27 @@ public class FieldMonitor {
 
 	public static void monitorSys(int dataport) throws IOException,
 			InterruptedException, ClassNotLoadedException {
-		// connect
-		Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
-		Runtime.getRuntime()
-				.exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8686,server=y,suspend=n InterestingQueue")
-				.waitFor();
 
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 
-		// set watch field on already loaded classes
+
 		List<ThreadReference> threadref = vm.allThreads();
 		try {
-			for (int i = 3; i < threadref.size(); i++) {
+			for (int i = 0; i < threadref.size(); i++) {
 				List<StackFrame> stack;
 				stack = threadref.get(i).frames();
 				int framecount = threadref.get(i).frameCount();
 
 				for (int j = 1; j < framecount; j++) {
-					List<LocalVariable> vv = stack.get(j).visibleVariables();
+					List<LocalVariable> localvariables = stack.get(j).visibleVariables();
 
-					for (int k = 0; k < vv.size(); k++) {
-						System.out.println("Name: "+vv.get(k).name()+" ---  Signarture: "+vv.get(k).signature());
+					for (int k = 0; k < localvariables.size(); k++) {
 						
-						if (stack.get(j).getValue(vv.get(k)) instanceof ObjectReference) {
+						if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 							Value information = stack.get(j)
-									.getValue(vv.get(k));
+									.getValue(localvariables.get(k));
 							Search((ObjectReference) information);
-
 						}
 					}
 				}
@@ -56,8 +49,8 @@ public class FieldMonitor {
 		}
 	}
 
-	private static void Search(ObjectReference or)
-			throws InterruptedException {
+	private static void Search(ObjectReference or) throws InterruptedException,
+			ClassNotLoadedException {
 		Stack<ObjectReference> s = new Stack<ObjectReference>();
 		ObjectReference popped;
 
@@ -69,14 +62,19 @@ public class FieldMonitor {
 			List<Field> fields = rt.allFields();
 
 			for (int i = 0; i < fields.size(); i++) {
-				if (fields.get(i) instanceof ObjectReference) {
-					s.push((ObjectReference) fields.get(i));
-					System.out.println((ObjectReference) fields.get(i) + " is an object");
+				Value fieldValue = popped.getValue(fields.get(i));
+				Type type = fields.get(i).type();
+				String name = fields.get(i).name();
+
+				if ((fields.get(i) instanceof ObjectReference)) {
+				//	System.out.println("FieldValue: " + fieldValue + " Type: "
+				//			+ type + " name:" + name);
+					Search((ObjectReference) fields.get(i));
 				}
 
 				else {
-					System.out.println(fields.get(i));
-
+					System.out.println("FieldValue: " + fieldValue + " Type: "
+							+ type + " name:" + name);
 				}
 
 			}
@@ -84,7 +82,5 @@ public class FieldMonitor {
 		}
 
 	}
-
-
 
 }
