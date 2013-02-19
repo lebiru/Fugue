@@ -6,6 +6,7 @@ public class Vertex {
 	
 	int id = 0;
 	String name = "";
+	Boolean func = false;
 	
 	public Vertex()
 	{
