@@ -15,7 +15,19 @@ public class Graph {
 	{
 
 	}
-
+	
+	/*
+	 * Constructor with vertices and edges as parameters. 
+	 */
+	public Graph(HashMap<Integer, Vertex> vertices, HashMap<Integer, Edges> edges)
+	{
+		this.vertices = vertices;
+		this.edges = edges;
+	}
+	
+	/*
+	 * Updates our graph. Call this to make an updated graph.
+	 */
 	public void updateGraph(HashMap<Integer, Vertex> vertices, HashMap<Integer, Edges> edges)
 	{
 
@@ -35,6 +47,9 @@ public class Graph {
 		
 	}
 
+	/*
+	 * Returns the graph.
+	 */
 	public HashMap<Integer, ArrayList<Integer>> getGraph()
 	{
 		return this.graph;
@@ -48,36 +63,51 @@ public class Graph {
 		return edges; 
 	}
 
+	/*
+	 * Adds a vertex to the vertices HashMap
+	 */
 	public void addVertex(Vertex v)
 	{
 		vertices.put(v.id, v);
 	}
 	
+	/*
+	 * Adds an edge to the edges HashMap
+	 */
 	public void addEdge(Edges e)
 	{
 		edges.put(e.id, e);
 	}
 	
+	/*
+	 * Input: Vertex ID
+	 * Output: The specified Vertex
+	 */
 	public Vertex getVertex(int id)
 	{
 		return vertices.get(id);
 	}
 	
+	/*
+	 * Input: Edge ID
+	 * Output: The specified edge
+	 */
 	public Edges getEdge(int id)
 	{
 		return edges.get(id);
 	}
 	
-
-	public void deleteVertex(int vertexID)
+	public String getVertexValue(int id)
 	{
-
-
+		return vertices.get(id).value;
+	}
+	
+	public String getEdgeName(int id)
+	{
+		return edges.get(id).name;
 	}
 
-
-
-	/*
+	/*DEPRECATED
 	 * For testing purposes, fills a graph with random vertexes and edges.
 	 * Vertexes will not point to themselves.
 	 * A node can have multiple edges to another node. 
@@ -160,6 +190,9 @@ public class Graph {
 
 	}
 
+	/*
+	 * Displays all the edges on the console.
+	 */
 	public void displayEdges()
 	{
 
@@ -169,6 +202,9 @@ public class Graph {
 		}
 	}
 
+	/*
+	 * Displays all the vertexes on the console.
+	 */
 	public void displayVertexes() 
 	{
 
