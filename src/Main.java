@@ -21,9 +21,9 @@ public class Main {
 		{
 			Runtime.getRuntime().exec(
 					"cmd PATH = " +
-					"C:\\Program Files\\Java\\jdk1.7.0_13\\bin;" +
-					"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib;" +
-					"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\\tools.jar");
+					"\"C:\\Program Files\\Java\\jdk1.7.0_13\\bin\";" +
+					"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\";" +
+					"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\\tools.jar\"");
 					Runtime.getRuntime().exec("cmd javac -g InterestingQueue.java");
 					Runtime.getRuntime().exec("cmd java -Xdebug -Xrunjdwp:transport=dt_socket,address=8686,server=y,suspend=n InterestingQueue").waitFor();
 		}

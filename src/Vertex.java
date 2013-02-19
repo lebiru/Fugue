@@ -5,7 +5,8 @@
 public class Vertex {
 	
 	int id = 0;
-	String name = "";
+	String value = "";
+	//add function or object boolean
 	Boolean func = false;
 	
 	public Vertex()
@@ -21,17 +22,17 @@ public class Vertex {
 	public Vertex(int id, String name)
 	{
 		this.id = id;
-		this.name = name;
+		this.value = name;
 	}
 	
 	public void setName(String name)
 	{
-		this.name = name;
+		this.value = name;
 	}
 	
 	public String getName()
 	{
-		return this.name;
+		return this.value;
 	}
 	
 	public int getID()
@@ -41,13 +42,13 @@ public class Vertex {
 	
 	public void displayVertex()
 	{
-		System.out.println("Vertex: " + this.id + " Name: " + this.name);
+		System.out.println("Vertex: " + this.id + " Name: " + this.value);
 	}
 	
 	public void resetVertex()
 	{
 		this.id = 0;
-		this.name = "";
+		this.value = "";
 	}
 	
 }
