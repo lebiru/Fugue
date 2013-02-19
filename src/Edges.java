@@ -10,13 +10,15 @@ public class Edges {
 	Vertex source = new Vertex();
 	Vertex destination = new Vertex();
 	int id = 0;
+	String name = "";
 	
 	
-	public Edges(int id, Vertex source, Vertex destination)
+	public Edges(int id, Vertex source, Vertex destination, String name)
 	{
 		this.source = source;
 		this.destination = destination;
 		this.id = id;
+		this.name = name;
 	}
 	
 	public Edges(int id)
@@ -29,6 +31,16 @@ public class Edges {
 		
 	}
 
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
+	public String getName()
+	{
+		return this.name;
+	}
+	
 	public void setSource(Vertex source)
 	{
 		this.source = source;

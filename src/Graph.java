@@ -8,7 +8,7 @@ public class Graph {
 
 	HashMap<Integer, ArrayList<Integer>> graph = new HashMap<Integer, ArrayList<Integer>>();
 	
-	HashMap<Integer, Vertex> vertexes = new HashMap<Integer, Vertex>();
+	HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 	HashMap<Integer, Edges> edges = new HashMap<Integer, Edges>();
 
 	public Graph()
@@ -16,9 +16,23 @@ public class Graph {
 
 	}
 
-	public void updateGraph()
+	public void updateGraph(HashMap<Integer, Vertex> vertices, HashMap<Integer, Edges> edges)
 	{
-		//working on it	
+
+		graph = new HashMap<Integer, ArrayList<Integer>>();
+		
+		for(Vertex v : vertices.values())
+		{
+			graph.put(v.id, new ArrayList<Integer>());
+		}
+		
+		for(Edges e : edges.values())
+		{
+			ArrayList<Integer> newEdges = graph.get(e.getSource().id);
+			newEdges.add(e.id);
+			graph.put((Integer)e.getSource().id, newEdges);
+		}
+		
 	}
 
 	public HashMap<Integer, ArrayList<Integer>> getGraph()
@@ -36,21 +50,28 @@ public class Graph {
 
 	public void addVertex(Vertex v)
 	{
-		//vertexes.add(v);
+		vertices.put(v.id, v);
 	}
+	
+	public void addEdge(Edges e)
+	{
+		edges.put(e.id, e);
+	}
+	
+	public Vertex getVertex(int id)
+	{
+		return vertices.get(id);
+	}
+	
+	public Edges getEdge(int id)
+	{
+		return edges.get(id);
+	}
+	
 
 	public void deleteVertex(int vertexID)
 	{
-//		int counter = 0;
-//		for(Vertex v : vertexes)
-//		{
-//			counter++;
-//			if(v.id == vertexID)
-//			{
-//				vertexes.remove(counter);
-//				return;
-//			}
-//		}
+
 
 	}
 
@@ -61,8 +82,6 @@ public class Graph {
 	 * Vertexes will not point to themselves.
 	 * A node can have multiple edges to another node. 
 	 */
-
-	
 	public void staticTestFillGraph()
 	{
 		
@@ -86,63 +105,43 @@ public class Graph {
 		graph.put(3, three);
 		graph.put(4, four);
 		
+	}
+	
+	
+	/*
+	 * This method tests dynamically filling a graph.
+	 * It is a model for the data gathering part. 
+	 * Make sure you give an ID number when adding new vertices/edges.
+	 */
+	public void dynamicTestFillGraph()
+	{
+		
+		Vertex one = new Vertex(1, "333");
+		Vertex two = new Vertex(2, "This is the test string");
+		Vertex three = new Vertex(3, "2.22");
+		Vertex four = new Vertex(4, "b");
+		
+		Edges a = new Edges(5, one, one, "number333");
+		Edges b = new Edges(6, one, two, "testString");
+		Edges c = new Edges(7, two, three, "doubleVariable");
+		Edges d = new Edges(8, three, four, "characterVariable");
+		Edges e = new Edges(9, four, three, "doubleVariable");
+		Edges f = new Edges(10, four, two, "testString");
 		
 		
+		addVertex(one);
+		addVertex(two);
+		addVertex(three);
+		addVertex(four);
 		
-//		int[] sourceArray =      {3,4,8,2,5,7,4,8,3,1};
-//		int[] destinationArray = {9,1,2,4,7,8,3,6,8,5};
-//		
-//		for(int i : sourceArray)
-//		{
-//			if(!graph.containsKey(sourceArray[i]))
-//			{
-//				graph.put(sourceArray[i], new HashMap<Integer, Integer>());
-//			}
-//			
-//			graph.get(sourceArray[i]).put(sourceArray[i], destinationArray[i]);
-//			
-//			if(!graph.containsKey(destinationArray[i]))
-//			{
-//				graph.put(sourceArray[i], new HashMap<Integer, Integer>());
-//			}
-//			
-//		}
-//		
-//		HashMap<Integer, Integer>
+		addEdge(a);
+		addEdge(b);
+		addEdge(c);
+		addEdge(d);
+		addEdge(e);
+		addEdge(f);
 		
-		
-		
-//		ArrayList<Integer> source = new ArrayList<Integer>();
-//		ArrayList<Integer> destination = new ArrayList<Integer>();
-//		
-//		//Putting sourceArray -> source & destinationArray -> destination
-//		for(int i : sourceArray)
-//		{
-//			source.add(sourceArray[i]);
-//			destination.add(destinationArray[i]);
-//		}
-//		
-//		
-//		//Adding distinct sources to HashMap sources
-//		for(Integer i : source)
-//		{
-//			if(!vertexes.containsKey(i))
-//			{
-//				vertexes.put(source.get(i), new Vertex(source.get(i)));
-//			}
-//			
-//		}
-//		
-//		for(Integer i : destination)
-//		{
-//			
-//			if(!vertexes.containsKey(i))
-//			{
-//				vertexes.put(destination.get(i), new Vertex(destination.get(i)));
-//			}
-//			
-//		}
-		
+		updateGraph(vertices, edges);
 		
 	}
 
@@ -164,24 +163,20 @@ public class Graph {
 	public void displayEdges()
 	{
 
-//		for(Edges e : edges)
-//		{
-//			e.displayEdge();
-//		}
+		for(Edges e: edges.values())
+		{
+			e.displayEdge();
+		}
 	}
 
 	public void displayVertexes() 
 	{
 
-//		for(Vertex v : vertexes)
-//		{
-//			v.displayVertex();
-//		}
+		for(Vertex v : vertices.values())
+		{
+			v.displayVertex();
+		}
 
 	}
-
-
-
-
 
 }
