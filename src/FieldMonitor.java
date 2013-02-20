@@ -66,9 +66,7 @@ public class FieldMonitor {
 				Type type = fields.get(i).type();
 				String name = fields.get(i).name();
 
-				if ((fields.get(i) instanceof ObjectReference)) {
-				//	System.out.println("FieldValue: " + fieldValue + " Type: "
-				//			+ type + " name:" + name);
+				if ((fieldValue instanceof ObjectReference)) {
 					Search((ObjectReference) fields.get(i));
 				}
 
