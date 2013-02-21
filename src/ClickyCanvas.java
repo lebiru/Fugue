@@ -7,31 +7,28 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 
 @SuppressWarnings("serial")
 public class ClickyCanvas extends Canvas {
 	/**
 	 * 
 	 */
-	
-	//static ClickyCanvas c = new ClickyCanvas();
-	
-	//static Graphics visual;
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	static int width = (int)screenSize.getWidth() - 10;
 	static int height = (int)screenSize.getHeight() - 80;
-		
-		//visual = c.getGraphics();
-		//visual.setColor(Color.BLACK);
-		//c.paint(visual);
-	
+	static Graph inputGraph = new Graph();
     
-    @Override
+    public ClickyCanvas(Graph graph) {
+		// TODO Auto-generated constructor stub
+    	inputGraph = graph;
+	}
+
+	@Override
     public void paint(Graphics visual)
     {
-    	ArrayList<Integer> vertices = new ArrayList<Integer>();
-		ArrayList<Integer> edges = new ArrayList<Integer>();
-		ArrayList<Integer> func = new ArrayList<Integer>(); // 0 if object, 1 if function
+    	ArrayList<Integer> func = new ArrayList<Integer>();
 		// keep track of coordinates of each of the objects (hash idX and idY)
 		HashMap<Integer, Integer> idX = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idY = new HashMap<Integer, Integer>();
@@ -39,21 +36,28 @@ public class ClickyCanvas extends Canvas {
 		double section;
 		visual.setColor(Color.BLACK);
 		
-		// add function to return the list of vertex IDs
-		vertices.add(0);
-		vertices.add(1);
-		vertices.add(2);
+		inputGraph.getGraph();
 		
-		func.add(1);
-		func.add(0);
-		func.add(0);
-		numFunctions = sum(func);
+		// add function to return the list of vertex IDs
+		for (int i : inputGraph.vertices.keySet())
+		{
+			if(inputGraph.vertices.get(i).func)
+			{
+				func.add(1);
+			}
+			else
+			{
+				func.add(0);
+			}
+		}
+		numFunctions = 1;
 		section = (double)width / numFunctions;
 		int x = 0, y = 0, changeX = 1;
 		
 		
-		for(int i : vertices)
+		for(int i : inputGraph.vertices.keySet())
 		{
+			System.out.println(i);
 			// draw the vertex
 			if(func.get(i) == 1) //function
 			{
@@ -64,8 +68,8 @@ public class ClickyCanvas extends Canvas {
 				changeX = 1;
 				
 				// record coordinates
-				idX.put(vertices.get(i), x);
-				idY.put(vertices.get(i), y);
+				idX.put(i, x);
+				idY.put(i, y);
 				
 				// draw rectangle for functions
 				visual.drawRect(x, y, 150, 20);
@@ -89,8 +93,8 @@ public class ClickyCanvas extends Canvas {
 			}
 			// modify this function to only return the edges for a specific vertex 
 			//g.getEdges(i);
-			edges.add(27);
-			edges.add(34);
+			//edges.add(27);
+			//edges.add(34);
 			//visual.drawArrow(idX, idY, vertices.get(i), edges.get(0));
 		}
 		

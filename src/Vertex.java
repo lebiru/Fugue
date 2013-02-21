@@ -7,6 +7,7 @@ public class Vertex {
 	int id = 0;
 	String value = "";
 	//add function or object boolean
+	Boolean func = false;
 	
 	public Vertex()
 	{
