@@ -3,11 +3,11 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.IOException;
-//import com.sun.jdi.ClassNotLoadedException;
+import com.sun.jdi.ClassNotLoadedException;
 
 public class Main {
 
-	public static void main(String[] args) { //throws IOException, InterruptedException, ClassNotLoadedException  {
+	public static void main(String[] args) throws IOException, InterruptedException, ClassNotLoadedException  {
 
 		Graph g = new Graph();
 		System.out.println("Fugue: Visualized Java Debugger");
@@ -47,10 +47,6 @@ public class Main {
 		FieldMonitor.monitorSys(8600,g);
 
 		//Graph test
-
-
-		//g.staticTestFillGraph();
-		//g.displayGraph();
 		g.dynamicTestFillGraph();
 		g.displayGraph();
 
