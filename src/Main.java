@@ -17,44 +17,43 @@ public class Main {
 		Frame app = new Frame("Click me!");
 
 		String os = System.getProperty("os.name");
-		if(os.contains("Windows")) //if Windows is the Operating System
+		//WINDOWS
+		if(os.contains("Windows"))
 		{
 			Runtime.getRuntime().exec(
 					"cmd PATH = " +
-					"\"C:\\Program Files\\Java\\jdk1.7.0_13\\bin\";" +
-					"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\";" +
+							"\"C:\\Program Files\\Java\\jdk1.7.0_13\\bin\";" +
+							"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\";" +
 					"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\\tools.jar\"");
-					Runtime.getRuntime().exec("cmd javac -g InterestingQueue.java");
-					Runtime.getRuntime().exec("cmd java -Xdebug -Xrunjdwp:transport=dt_socket,address=8600,server=y,suspend=n InterestingQueue").waitFor();
+			Runtime.getRuntime().exec("cmd javac -g InterestingQueue.java");
+			Runtime.getRuntime().exec("cmd java -Xdebug -Xrunjdwp:transport=dt_socket,address=8600,server=y,suspend=n InterestingQueue").waitFor();
 		}
-		else //if Linux
+		//UNIX
+		else 
 		{
 			Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
 			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8600,server=y,suspend=n InterestingQueue").waitFor();
 		}
 
-
-
-		try {
-		    Thread.sleep(100);
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
+		try 
+		{
+			Thread.sleep(100);
+		} 
+		catch(InterruptedException ex) 
+		{
+			Thread.currentThread().interrupt();
 		}
 
-
-
-		FieldMonitor m = new FieldMonitor();	
+		//FieldMonitor m = new FieldMonitor();	
 		FieldMonitor.monitorSys(8600,g);
 
 		//Graph test
 		g.dynamicTestFillGraph();
 		g.displayGraph();
 
-
-
 		// call function to draw graph
 		ClickyCanvas c = new ClickyCanvas(g);
-		
+
 		app.addWindowListener(new Closer());
 		c.setPreferredSize(new Dimension(width, height));
 		app.add(c);
@@ -62,7 +61,6 @@ public class Main {
 		app.setVisible(true);
 		c.setVisible(true);
 		c.setBackground(Color.white);
-
 
 	}
 
