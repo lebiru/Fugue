@@ -20,31 +20,31 @@ public class ClickyCanvas extends Canvas {
 	static int width = (int)screenSize.getWidth() - 10;
 	static int height = (int)screenSize.getHeight() - 80;
 	static Graph inputGraph = new Graph();
-    
-    public ClickyCanvas(Graph graph) {
+
+	public ClickyCanvas(Graph graph) {
 		// TODO Auto-generated constructor stub
-    	inputGraph = graph;
+		inputGraph = graph;
 	}
 
 	@Override
-    public void paint(Graphics g)
-    {
+	public void paint(Graphics g)
+	{
 		Graphics2D visual = (Graphics2D)g;
-    	ArrayList<Integer> func = new ArrayList<Integer>();
-    	ArrayList<Integer> coordinates = new ArrayList<Integer>();
-    	ArrayList<Integer> triCoordinates = new ArrayList<Integer>();
-    	int[] triX = new int[3], triY = new int[3];
-    	int[] edgeX = new int[3], edgeY = new int[3];
-    	// keep track of coordinates of each of the objects (hash idX and idY)
+		ArrayList<Integer> func = new ArrayList<Integer>();
+		ArrayList<Integer> coordinates = new ArrayList<Integer>();
+		ArrayList<Integer> triCoordinates = new ArrayList<Integer>();
+		int[] triX = new int[3], triY = new int[3];
+		int[] edgeX = new int[3], edgeY = new int[3];
+		// keep track of coordinates of each of the objects (hash idX and idY)
 		HashMap<Integer, Integer> idX = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idY = new HashMap<Integer, Integer>();
 		int numFunctions, from, to, fromX, fromY, toX, toY;
 		int midX, midY, nameLength;
 		double section;
 		visual.setColor(Color.BLACK);
-		
+
 		inputGraph.getGraph();
-		
+
 		// add function to return the list of vertex IDs
 		for (int i : inputGraph.vertices.keySet())
 		{
@@ -60,8 +60,8 @@ public class ClickyCanvas extends Canvas {
 		numFunctions = sum(func);
 		section = (double)width / numFunctions;
 		int x = 0, y = 0, changeX = 1, count = 0;
-		
-		
+
+
 		for(int i : inputGraph.vertices.keySet())
 		{
 			// draw the vertex
@@ -73,7 +73,7 @@ public class ClickyCanvas extends Canvas {
 				y = 50;
 				changeX = 1;
 				count = 0;
-				
+
 				// draw rectangle for functions
 				visual.drawRect(x, y, 150, 20);
 			}
@@ -107,13 +107,13 @@ public class ClickyCanvas extends Canvas {
 			// record coordinates
 			idX.put(i, x);
 			idY.put(i, y);
-			
+
 			// display value
 			visual.drawString(inputGraph.vertices.get(i).value, x+5, y+15);
 			// modify this function to only return the edges for a specific vertex 
-			
+
 		}
-		
+
 		visual.setColor(Color.RED);
 		for(int i : inputGraph.edges.keySet())
 		{
@@ -124,7 +124,7 @@ public class ClickyCanvas extends Canvas {
 			to = inputGraph.edges.get(i).destination.id;
 			toX = idX.get(to);
 			toY = idY.get(to);
-			
+
 			if(to != from)
 			{
 				// find coordinates to draw line
@@ -169,7 +169,7 @@ public class ClickyCanvas extends Canvas {
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
 		}
-    }
+	}
 
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coor) {
 		// TODO Auto-generated method stub
@@ -206,7 +206,7 @@ public class ClickyCanvas extends Canvas {
 				angle = angle + 180;
 			}
 		}
-		
+
 		// use the point and angle to create triangle
 		remAngle = angle + 30.0;
 		tempX = triCoor.get(0) - sideLength * Math.cos(Math.toRadians(remAngle));
@@ -232,7 +232,7 @@ public class ClickyCanvas extends Canvas {
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);
-		
+
 		if(Math.abs(fromX - toX) < 50)
 		{
 			coor.set(0, fromX + 75);
@@ -283,14 +283,14 @@ public class ClickyCanvas extends Canvas {
 		return coor;
 	}
 
-private static int sum(ArrayList<Integer> func) {
-	int total = 0;
-	for(int i : func)
-	{
-		total = total + i;
+	private static int sum(ArrayList<Integer> func) {
+		int total = 0;
+		for(int i : func)
+		{
+			total = total + i;
+		}
+		return total;
 	}
-	return total;
-}
 
 
 }

@@ -1,26 +1,20 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
-
-import javax.xml.crypto.Data;
 import com.sun.jdi.*;
-import com.sun.jdi.event.*;
-import com.sun.jdi.request.*;
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 public class FieldMonitor {
 
 	public static void monitorSys(int dataport, Graph g) throws IOException,
-			InterruptedException, ClassNotLoadedException {
+	InterruptedException, ClassNotLoadedException {
 		ArrayList<Integer> haveyouseen = new ArrayList<Integer>();
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
 
 		try {
-			// for (int i = 2; i < threadref.size(); i++) {
+
 			List<StackFrame> stack;
 			stack = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
@@ -40,7 +34,6 @@ public class FieldMonitor {
 
 				}
 			}
-			// }
 
 		}
 
@@ -50,12 +43,13 @@ public class FieldMonitor {
 
 		catch (AbsentInformationException e) {
 			e.printStackTrace();
+
 		}
+		g.updateGraph(g.vertices,g.edges);
 	}
 
-	private static void Search(ObjectReference or,
-			ArrayList<Integer> haveyouseen, Graph g) throws InterruptedException,
-			ClassNotLoadedException {
+	private static void Search(ObjectReference or,ArrayList<Integer> haveyouseen, Graph g) throws InterruptedException, ClassNotLoadedException 
+	{
 		Stack<ObjectReference> s = new Stack<ObjectReference>();
 		ObjectReference popped;
 
@@ -71,47 +65,41 @@ public class FieldMonitor {
 
 				Value fieldValue = popped.getValue(fields.get(i));
 
+				//Object References
+				if ((fieldValue instanceof ObjectReference)) {
 
-				//if (haveyouseen.contains((int) popped.uniqueID()) == false) {
-
-
-				// IF Object References
-					if ((fieldValue instanceof ObjectReference)) {
-
-						Type type = fields.get(i).type();
-						String name = fields.get(i).name();
-						haveyouseen.add((int) popped.uniqueID());
-						System.out.println("Field: " + fields + " name: "
-								+ name + " ID: "+ popped.uniqueID());
-						if(counter==0) {
-							LastVertex = new Vertex((int)popped.uniqueID(),fieldValue.toString(),true);
-						}
-
-
-						//Search((ObjectReference) fieldValue, haveyouseen, g);
-						s.push((ObjectReference) fieldValue);
-
-						Vertex temp = (new Vertex((int)popped.uniqueID(),fieldValue.toString(),true));
-						g.addVertex(temp);
-						LastVertex = temp;
-
-						g.addEdge(new Edges((int)popped.uniqueID(),temp,temp,fieldValue.toString()));
+					Type type = fields.get(i).type();
+					String name = fields.get(i).name();
+					haveyouseen.add((int) popped.uniqueID());
+					System.out.println("Field: " + fields + " name: "
+							+ name + " ID: "+ popped.uniqueID());
+					if(counter==0) 
+					{
+						LastVertex = new Vertex((int)popped.uniqueID(),fieldValue.toString(),true);
 					}
-					// Else Primative Type
-					else {
 
-						System.out.println("Primative: "+ fieldValue +"  fieldValue"
-								+ " name: " + fields.get(i).name() + " ID "+popped.uniqueID());
+					s.push((ObjectReference) fieldValue);
 
+					Vertex temp = (new Vertex((int)popped.uniqueID(),fieldValue.toString(),true));
+					g.addVertex(temp);
+					LastVertex = temp;
+					g.addEdge(new Edge((int)popped.uniqueID(),temp,LastVertex,fieldValue.toString()));
 
-
-					}
+					
 				}
+				//Primitive Type
+				else {
 
-			//}
+					System.out.println("Primative: "+ fieldValue +"  fieldValue"
+							+ " name: " + fields.get(i).name() + " ID "+popped.uniqueID());
+
+
+
+				}
+			}
 
 		}
-		g.updateGraph(g.vertices,g.edges);
+
 	}
 
 
