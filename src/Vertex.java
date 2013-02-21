@@ -7,7 +7,7 @@ public class Vertex {
 	int id = 0;
 	String value = "";
 	//add function or object boolean
-	Boolean isAFunction = false;
+	Boolean func = false;
 	
 	public Vertex()
 	{
@@ -19,17 +19,17 @@ public class Vertex {
 		this.id = id;
 	}
 	
-	public Vertex(int id, String name)
+	public Vertex(int id, String value)
 	{
 		this.id = id;
-		this.value = name;
+		this.value = value;
 	}
 	
-	public Vertex(int id, String name, boolean func)
+	public Vertex(int id, String value, Boolean func)
 	{
 		this.id = id;
-		this.value = name;
-		this.isAFunction = func;
+		this.value = value;
+		this.func = func;
 	}
 	
 	public void setName(String name)

@@ -146,10 +146,10 @@ public class Graph {
 	public void dynamicTestFillGraph()
 	{
 		
-		Vertex one = new Vertex(1, "333");
-		Vertex two = new Vertex(2, "This is the test string");
-		Vertex three = new Vertex(3, "2.22");
-		Vertex four = new Vertex(4, "b");
+		Vertex one = new Vertex(1, "Main", true);
+		Vertex two = new Vertex(2, "This is the test string", false);
+		Vertex three = new Vertex(3, "2.22", false);
+		Vertex four = new Vertex(4, "b", false);
 		
 		Edges a = new Edges(5, one, one, "number333");
 		Edges b = new Edges(6, one, two, "testString");
