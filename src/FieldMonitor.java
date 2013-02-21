@@ -12,9 +12,9 @@ import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 public class FieldMonitor {
 
-	public static void monitorSys(int dataport, Graph g) throws IOException,
+	public static void monitorSys(int dataport) throws IOException,
 			InterruptedException, ClassNotLoadedException {
-		ArrayList<Integer> haveyouseen = new ArrayList<Integer>();
+		HashMap<Integer,Integer> haveyouseen = new HashMap<Integer,Integer>();
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
@@ -35,7 +35,7 @@ public class FieldMonitor {
 					if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
-						Search((ObjectReference) information, haveyouseen, g);
+						Search((ObjectReference) information, haveyouseen);
 					}
 
 				}
@@ -54,8 +54,8 @@ public class FieldMonitor {
 	}
 
 	private static void Search(ObjectReference or,
-			ArrayList<Integer> haveyouseen, Graph g) throws InterruptedException,
-			ClassNotLoadedException {
+			HashMap<Integer,Integer> haveyouseen) throws InterruptedException,
+		ClassNotLoadedException {
 		Stack<ObjectReference> s = new Stack<ObjectReference>();
 		ObjectReference popped;
 
@@ -66,52 +66,66 @@ public class FieldMonitor {
 			int counter = 0;
 			ReferenceType rt = popped.referenceType();
 			List<Field> fields = rt.allFields();
-			Vertex LastVertex;
 			for (int i = 0; i < fields.size(); i++) {
 
 				Value fieldValue = popped.getValue(fields.get(i));
 
 
-				//if (haveyouseen.contains((int) popped.uniqueID()) == false) {
-
-
-				// IF Object References
+				if (haveyouseen.containsKey((int)popped.uniqueID()) == false||haveyouseen.get((int)popped.uniqueID())== 1) {
+					{
+					if(haveyouseen.get((int)popped.uniqueID())== null) {
+						haveyouseen.put((int)popped.uniqueID(), 1);
+					}
+				
+					
+					
+					else if(haveyouseen.get((int)popped.uniqueID())== 1) {
+						haveyouseen.put((int)popped.uniqueID(), 2);
+					}
+					}
+				
+						// IF Object References
+					
+					
+					
+					
 					if ((fieldValue instanceof ObjectReference)) {
 
 						Type type = fields.get(i).type();
 						String name = fields.get(i).name();
-						haveyouseen.add((int) popped.uniqueID());
+						
 						System.out.println("Field: " + fields + " name: "
 								+ name + " ID: "+ popped.uniqueID());
-						if(counter==0) {
+						/*if(counter==0) {
 							LastVertex = new Vertex((int)popped.uniqueID(),fieldValue.toString(),true);
-						}
+						}*/
 
 
-						//Search((ObjectReference) fieldValue, haveyouseen, g);
-						s.push((ObjectReference) fieldValue);
+						Search((ObjectReference) fieldValue, haveyouseen);
+						//s.push((ObjectReference) fieldValue);
 
-						Vertex temp = (new Vertex((int)popped.uniqueID(),fieldValue.toString(),true));
+						/*Vertex temp = (new Vertex((int)popped.uniqueID(),fieldValue.toString(),true));
 						g.addVertex(temp);
-						LastVertex = temp;
+						LastVertex = temp;*/
 
-						g.addEdge(new Edges((int)popped.uniqueID(),temp,temp,fieldValue.toString()));
+						/*g.addEdge(new Edges((int)popped.uniqueID(),temp,temp,fieldValue.toString()));*/
 					}
 					// Else Primative Type
 					else {
-
+						//haveyouseen.add((int) popped.uniqueID());
 						System.out.println("Primative: "+ fieldValue +"  fieldValue"
 								+ " name: " + fields.get(i).name() + " ID "+popped.uniqueID());
 
 
 
 					}
+					
 				}
 
-			//}
+			}
 
 		}
-		g.updateGraph(g.vertices,g.edges);
+
 	}
 
 
