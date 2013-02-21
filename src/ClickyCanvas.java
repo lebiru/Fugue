@@ -44,7 +44,7 @@ public class ClickyCanvas extends Canvas {
 		// add function to return the list of vertex IDs
 		for (int i : inputGraph.vertices.keySet())
 		{
-			if(inputGraph.vertices.get(i).func)
+			if(inputGraph.vertices.get(i).isAFunction)
 			{
 				func.add(1);
 			}
@@ -61,7 +61,7 @@ public class ClickyCanvas extends Canvas {
 		for(int i : inputGraph.vertices.keySet())
 		{
 			// draw the vertex
-			if(inputGraph.vertices.get(i).func) //function
+			if(inputGraph.vertices.get(i).isAFunction) //function
 			{
 				// find starting x (10 from left)
 				x = (int)(width - section*(numFunctions) + 10);
