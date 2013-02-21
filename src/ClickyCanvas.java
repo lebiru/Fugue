@@ -36,6 +36,7 @@ public class ClickyCanvas extends Canvas {
 		HashMap<Integer, Integer> idX = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idY = new HashMap<Integer, Integer>();
 		int numFunctions, from, to, fromX, fromY, toX, toY, temp;
+		int midX, midY, nameLength, self;
 		double section;
 		visual.setColor(Color.BLACK);
 		
@@ -113,7 +114,7 @@ public class ClickyCanvas extends Canvas {
 		visual.setColor(Color.RED);
 		for(int i : inputGraph.edges.keySet())
 		{
-			// draw the arrow for the edge and display the name
+			// draw the arrow for the edge
 			from = inputGraph.edges.get(i).source.id;
 			fromX = idX.get(from);
 			fromY = idY.get(from);
@@ -123,12 +124,14 @@ public class ClickyCanvas extends Canvas {
 			
 			if(to != from)
 			{
+				// find coordinates to draw line
 				coordinates = findConnectingPoints(fromX, fromY, toX, toY);
 				fromX = coordinates.get(0);
 				fromY = coordinates.get(1);
 				toX = coordinates.get(2);
 				toY = coordinates.get(3);
 				visual.drawLine(fromX, fromY, toX, toY);
+				// find coordinates to draw arrow
 				triCoordinates = findTriCordinates(coordinates);
 				triX[0] = triCoordinates.get(0);
 				triX[1] = triCoordinates.get(1);
@@ -137,23 +140,29 @@ public class ClickyCanvas extends Canvas {
 				triY[1] = triCoordinates.get(4);
 				triY[2] = triCoordinates.get(5);
 				visual.fillPolygon(triX, triY, 3);
-				
+				// display the name of the edge
+				midX = (fromX + toX) / 2;
+				midY = (fromY + toY) / 2;
+				nameLength = inputGraph.edges.get(i).name.length();
+				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
+			}
+			else
+			{
+				visual.drawArc(fromX+50, fromY+10, 50, 20, 180, 180);
+				triX[0] = fromX + 100;
+				triX[1] = (int)(triX[0] - 10.0 * Math.cos(Math.toRadians(330)));
+				triX[2] = (int)(triX[0] - 10.0 * Math.cos(Math.toRadians(280)));
+				triY[0] = toY + 20;
+				triY[1] = (int)(triY[0] - 10.0 * Math.sin(Math.toRadians(330)));
+				triY[2] = (int)(triY[0] - 10.0 * Math.sin(Math.toRadians(280)));
+				visual.fillPolygon(triX, triY, 3);
+				// display the name of the edge
+				midX = (fromX + 75);
+				midY = (fromY + 40);
+				nameLength = inputGraph.edges.get(i).name.length();
+				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
 		}
-		//visual.drawRect(20, 60, 150, 20);
-		//visual.drawArc(20, 100, 5, 55, 90, 90);
-		//visual.drawArrow(idX, idY, vertices.get(i), edges.get(0));
-		
-		// draw arrow function definition
-		//combine a line and a triangle to create an arrow
-    	/*int fromX, fromY, toX, toY, left = 0;
-    	double angle;
-    	// if arrow is pointing left
-    	if(fromX > toX)
-    	{
-    		left = 1;
-    	}*/
-		
     }
 
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coor) {
@@ -213,11 +222,8 @@ public class ClickyCanvas extends Canvas {
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);
-		if(fromX == toX && fromY == toY) //connected to itself
-		{
-
-		}
-		else if(Math.abs(fromX - toX) < 50)
+		
+		if(Math.abs(fromX - toX) < 50)
 		{
 			coor.set(0, fromX + 75);
 			coor.set(2, toX + 75);
