@@ -44,7 +44,6 @@ public class Main {
 			Thread.currentThread().interrupt();
 		}
 
-		//FieldMonitor m = new FieldMonitor();	
 		FieldMonitor.monitorSys(8600,g);
 
 		//Graph test
