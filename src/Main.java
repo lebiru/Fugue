@@ -9,7 +9,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotLoadedException  {
 
-		/*Graph g = new Graph();
+		Graph g = new Graph();
 		System.out.println("Fugue: Visualized Java Debugger");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth() - 10;
@@ -17,7 +17,7 @@ public class Main {
 		Frame app = new Frame("Click me!");
 
 		String os = System.getProperty("os.name");
-		if(os.contains("Windows")) //if Windows is the Operating System
+/*		if(os.contains("Windows")) //if Windows is the Operating System
 		{
 			Runtime.getRuntime().exec(
 					"cmd PATH = " +
@@ -30,9 +30,9 @@ public class Main {
 		else //if Linux
 		{
 			Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
-			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8610,server=y,suspend=n InterestingQueue").waitFor();
+			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8620,server=y,suspend=n InterestingQueue").waitFor();
 		}
-
+*/
 
 
 		try {
@@ -40,22 +40,22 @@ public class Main {
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
-*/
+
 
 
 		FieldMonitor m = new FieldMonitor();	
-		FieldMonitor.monitorSys(8610);
+		FieldMonitor.monitorSys(8640);
 
-		//Graph test
+	/*	//Graph test
 
 
-		/*g.dynamicTestFillGraph();
-		g.displayGraph();*/
+		g.dynamicTestFillGraph();
+		g.displayGraph();
 
 
 
 		// call function to draw graph
-	/*	ClickyCanvas c = new ClickyCanvas(g);
+		ClickyCanvas c = new ClickyCanvas(g);
 		
 		app.addWindowListener(new Closer());
 		c.setPreferredSize(new Dimension(width, height));
@@ -63,8 +63,8 @@ public class Main {
 		app.pack();
 		app.setVisible(true);
 		c.setVisible(true);
-		c.setBackground(Color.white);
-*/
+		c.setBackground(Color.white);*/
+
 
 	}
 

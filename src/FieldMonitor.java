@@ -14,35 +14,31 @@ public class FieldMonitor {
 
 	public static void monitorSys(int dataport) throws IOException,
 			InterruptedException, ClassNotLoadedException {
-		HashMap<Integer,Integer> haveyouseen = new HashMap<Integer,Integer>();
+		HashMap<String, Integer> haveyouseen = new HashMap<String, Integer>();
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
 
 		try {
-			// for (int i = 2; i < threadref.size(); i++) {
+	
 			List<StackFrame> stack;
 			stack = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
 			for (int j = 1; j < framecount; j++) {
 				List<LocalVariable> localvariables = stack.get(j)
 						.visibleVariables();
-
 				for (int k = 0; k < localvariables.size(); k++) {
-					System.out.println("Name: " + localvariables.get(k).name()
+					/*System.out.println("Name: " + localvariables.get(k).name()
 							+ " ---  Signarture: "
-							+ localvariables.get(k).signature());
+							+ localvariables.get(k).signature());*/
 					if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
 						Search((ObjectReference) information, haveyouseen);
 					}
-
 				}
 			}
-			// }
-
-		}
+		 }
 
 		catch (IncompatibleThreadStateException e) {
 			e.printStackTrace();
@@ -52,81 +48,49 @@ public class FieldMonitor {
 			e.printStackTrace();
 		}
 	}
+		
 
-	private static void Search(ObjectReference or,
-			HashMap<Integer,Integer> haveyouseen) throws InterruptedException,
-		ClassNotLoadedException {
-		Stack<ObjectReference> s = new Stack<ObjectReference>();
-		ObjectReference popped;
+	private static void Search(ObjectReference or, HashMap<String, Integer> haveyouseen) throws InterruptedException,
+			ClassNotLoadedException {
+		ReferenceType rt = or.referenceType();
+		List<Field> fields = rt.allFields();
 
-		s.push(or);
+		for (int i = 0; i < fields.size(); i++) {
 
-		while (!s.isEmpty()) {
-			popped = s.pop();
-			int counter = 0;
-			ReferenceType rt = popped.referenceType();
-			List<Field> fields = rt.allFields();
-			for (int i = 0; i < fields.size(); i++) {
-
-				Value fieldValue = popped.getValue(fields.get(i));
-
-
-				if (haveyouseen.containsKey((int)popped.uniqueID()) == false||haveyouseen.get((int)popped.uniqueID())== 1) {
-					{
-					if(haveyouseen.get((int)popped.uniqueID())== null) {
-						haveyouseen.put((int)popped.uniqueID(), 1);
-					}
+			String name = fields.get(i).name();
+			String key = name + or.uniqueID();
+			Value fieldValue = or.getValue(fields.get(i));
+			if (haveyouseen.containsKey(key) == false) {
 				
-					
-					
-					else if(haveyouseen.get((int)popped.uniqueID())== 1) {
-						haveyouseen.put((int)popped.uniqueID(), 2);
-					}
-					}
+					if (haveyouseen.get(key) == null) 
+						haveyouseen.put(key, 1);
+
 				
-						// IF Object References
-					
-					
-					
-					
 					if ((fieldValue instanceof ObjectReference)) {
-
-						Type type = fields.get(i).type();
-						String name = fields.get(i).name();
 						
-						System.out.println("Field: " + fields + " name: "
-								+ name + " ID: "+ popped.uniqueID());
-						/*if(counter==0) {
-							LastVertex = new Vertex((int)popped.uniqueID(),fieldValue.toString(),true);
-						}*/
-
-
+						String signature = fields.get(i).signature();
+						
+						if(!signature.contains("java")){
+						System.out.println("OBJECT Field: " + fieldValue  + " name: "
+								+ name + " ID: " + or.uniqueID()+ "    " +signature);
+						}
+						
+						
 						Search((ObjectReference) fieldValue, haveyouseen);
-						//s.push((ObjectReference) fieldValue);
-
-						/*Vertex temp = (new Vertex((int)popped.uniqueID(),fieldValue.toString(),true));
-						g.addVertex(temp);
-						LastVertex = temp;*/
-
-						/*g.addEdge(new Edges((int)popped.uniqueID(),temp,temp,fieldValue.toString()));*/
-					}
-					// Else Primative Type
-					else {
-						//haveyouseen.add((int) popped.uniqueID());
-						System.out.println("Primative: "+ fieldValue +"  fieldValue"
-								+ " name: " + fields.get(i).name() + " ID "+popped.uniqueID());
-
-
-
+						
 					}
 					
+					else if (fieldValue instanceof IntegerValue) {
+						//else{
+						String signature = fields.get(i).signature();
+						System.out.println("Primative: " + fieldValue
+								+ "  fieldValue" + " name: " + name + " ID "
+								+ or.uniqueID() + "   "+signature);
+					}
 				}
-
 			}
-
 		}
-
-	}
-
-
+	
 }
+	
+
