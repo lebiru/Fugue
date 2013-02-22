@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,28 +20,31 @@ public class ClickyCanvas extends Canvas {
 	static int width = (int)screenSize.getWidth() - 10;
 	static int height = (int)screenSize.getHeight() - 80;
 	static Graph inputGraph = new Graph();
-    
-    public ClickyCanvas(Graph graph) {
+
+	public ClickyCanvas(Graph graph) {
 		// TODO Auto-generated constructor stub
-    	inputGraph = graph;
+		inputGraph = graph;
 	}
 
 	@Override
-    public void paint(Graphics visual)
-    {
-    	ArrayList<Integer> func = new ArrayList<Integer>();
-    	ArrayList<Integer> coordinates = new ArrayList<Integer>();
-    	ArrayList<Integer> triCoordinates = new ArrayList<Integer>();
-    	int[] triX = new int[3], triY = new int[3];
-    	// keep track of coordinates of each of the objects (hash idX and idY)
+	public void paint(Graphics g)
+	{
+		Graphics2D visual = (Graphics2D)g;
+		ArrayList<Integer> func = new ArrayList<Integer>();
+		ArrayList<Integer> coordinates = new ArrayList<Integer>();
+		ArrayList<Integer> triCoordinates = new ArrayList<Integer>();
+		int[] triX = new int[3], triY = new int[3];
+		int[] edgeX = new int[3], edgeY = new int[3];
+		// keep track of coordinates of each of the objects (hash idX and idY)
 		HashMap<Integer, Integer> idX = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idY = new HashMap<Integer, Integer>();
-		int numFunctions, from, to, fromX, fromY, toX, toY, temp;
+		int numFunctions, from, to, fromX, fromY, toX, toY;
+		int midX, midY, nameLength;
 		double section;
 		visual.setColor(Color.BLACK);
-		
+
 		inputGraph.getGraph();
-		
+
 		// add function to return the list of vertex IDs
 		for (int i : inputGraph.vertices.keySet())
 		{
@@ -56,8 +60,8 @@ public class ClickyCanvas extends Canvas {
 		numFunctions = sum(func);
 		section = (double)width / numFunctions;
 		int x = 0, y = 0, changeX = 1, count = 0;
-		
-		
+
+
 		for(int i : inputGraph.vertices.keySet())
 		{
 			// draw the vertex
@@ -69,7 +73,7 @@ public class ClickyCanvas extends Canvas {
 				y = 50;
 				changeX = 1;
 				count = 0;
-				
+
 				// draw rectangle for functions
 				visual.drawRect(x, y, 150, 20);
 			}
@@ -86,7 +90,7 @@ public class ClickyCanvas extends Canvas {
 				else
 				{
 					// move each object down from the last one
-					y = y + 50;
+					y = y + 100;
 					if(count%2 == 0)
 					{
 						x = x + 20;
@@ -103,32 +107,37 @@ public class ClickyCanvas extends Canvas {
 			// record coordinates
 			idX.put(i, x);
 			idY.put(i, y);
-			
+
 			// display value
 			visual.drawString(inputGraph.vertices.get(i).value, x+5, y+15);
 			// modify this function to only return the edges for a specific vertex 
-			
+
 		}
-		
+
 		visual.setColor(Color.RED);
 		for(int i : inputGraph.edges.keySet())
 		{
-			// draw the arrow for the edge and display the name
+			// draw the arrow for the edge
 			from = inputGraph.edges.get(i).source.id;
 			fromX = idX.get(from);
 			fromY = idY.get(from);
 			to = inputGraph.edges.get(i).destination.id;
 			toX = idX.get(to);
 			toY = idY.get(to);
-			
+
 			if(to != from)
 			{
+				// find coordinates to draw line
 				coordinates = findConnectingPoints(fromX, fromY, toX, toY);
-				fromX = coordinates.get(0);
-				fromY = coordinates.get(1);
-				toX = coordinates.get(2);
-				toY = coordinates.get(3);
-				visual.drawLine(fromX, fromY, toX, toY);
+				edgeX[0] = coordinates.get(0);
+				edgeX[1] = coordinates.get(1);
+				edgeX[2] = coordinates.get(2);
+				edgeY[0] = coordinates.get(3);
+				edgeY[1] = coordinates.get(4);
+				edgeY[2] = coordinates.get(5);
+				visual.drawPolyline(edgeX, edgeY, 3);
+				//visual.drawLine(fromX, fromY, toX, toY);
+				// find coordinates to draw arrow
 				triCoordinates = findTriCordinates(coordinates);
 				triX[0] = triCoordinates.get(0);
 				triX[1] = triCoordinates.get(1);
@@ -137,24 +146,30 @@ public class ClickyCanvas extends Canvas {
 				triY[1] = triCoordinates.get(4);
 				triY[2] = triCoordinates.get(5);
 				visual.fillPolygon(triX, triY, 3);
-				
+				// display the name of the edge
+				midX = (fromX + toX) / 2;
+				midY = (fromY + toY) / 2;
+				nameLength = inputGraph.edges.get(i).name.length();
+				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
+			}
+			else
+			{
+				visual.drawArc(fromX+50, fromY+10, 50, 20, 180, 180);
+				triX[0] = fromX + 100;
+				triX[1] = (int)(triX[0] - 10.0 * Math.cos(Math.toRadians(330)));
+				triX[2] = (int)(triX[0] - 10.0 * Math.cos(Math.toRadians(280)));
+				triY[0] = toY + 20;
+				triY[1] = (int)(triY[0] - 10.0 * Math.sin(Math.toRadians(330)));
+				triY[2] = (int)(triY[0] - 10.0 * Math.sin(Math.toRadians(280)));
+				visual.fillPolygon(triX, triY, 3);
+				// display the name of the edge
+				midX = (fromX + 75);
+				midY = (fromY + 40);
+				nameLength = inputGraph.edges.get(i).name.length();
+				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
 		}
-		//visual.drawRect(20, 60, 150, 20);
-		//visual.drawArc(20, 100, 5, 55, 90, 90);
-		//visual.drawArrow(idX, idY, vertices.get(i), edges.get(0));
-		
-		// draw arrow function definition
-		//combine a line and a triangle to create an arrow
-    	/*int fromX, fromY, toX, toY, left = 0;
-    	double angle;
-    	// if arrow is pointing left
-    	if(fromX > toX)
-    	{
-    		left = 1;
-    	}*/
-		
-    }
+	}
 
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coor) {
 		// TODO Auto-generated method stub
@@ -191,7 +206,7 @@ public class ClickyCanvas extends Canvas {
 				angle = angle + 180;
 			}
 		}
-		
+
 		// use the point and angle to create triangle
 		remAngle = angle + 30.0;
 		tempX = triCoor.get(0) - sideLength * Math.cos(Math.toRadians(remAngle));
@@ -209,33 +224,34 @@ public class ClickyCanvas extends Canvas {
 	private ArrayList<Integer> findConnectingPoints(int fromX, int fromY, int toX, int toY) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> coor = new ArrayList<Integer>();
+		double angle, deltaX, deltaY;
+		double offset = 5.0;
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);
-		if(fromX == toX && fromY == toY) //connected to itself
-		{
+		coor.add(0);
+		coor.add(0);
 
-		}
-		else if(Math.abs(fromX - toX) < 50)
+		if(Math.abs(fromX - toX) < 50)
 		{
 			coor.set(0, fromX + 75);
 			coor.set(2, toX + 75);
 			if(fromY < toY)
 			{
-				coor.set(1, fromY + 20);
-				coor.set(3, toY);
+				coor.set(3, fromY + 20);
+				coor.set(5, toY);
 			}
 			else
 			{
-				coor.set(1, fromY);
-				coor.set(3, toY + 20);
+				coor.set(3, fromY);
+				coor.set(5, toY + 20);
 			}
 		}
 		else if(fromY == toY)
 		{
-			coor.set(1, fromY + 10);
-			coor.set(3, toY + 10);
+			coor.set(3, fromY + 10);
+			coor.set(5, toY + 10);
 			if(fromX < toX)
 			{
 				coor.set(0,fromX + 150);
@@ -247,17 +263,34 @@ public class ClickyCanvas extends Canvas {
 				coor.set(2, toX + 150);
 			}
 		}
+		
+		deltaX = (double)(coor.get(2) - coor.get(0));
+		deltaY = (double)(coor.get(5) - coor.get(3));
+		angle = Math.atan(deltaY/deltaX);
+		angle = Math.toDegrees(angle);
+		if (deltaX < 0)
+		{
+			angle = angle + 180;
+		}
+		
+		int tempX = (coor.get(2) + coor.get(0)) / 2;
+		int tempY = (coor.get(5) + coor.get(3)) / 2;
+		tempX = (int) (tempX - offset*Math.cos(180 - (angle + 90)));
+		tempY = (int) (tempY - offset*Math.sin(180 - (angle + 90)));
+		coor.set(1, tempX);
+		coor.set(4, tempY);
+		
 		return coor;
 	}
 
-private static int sum(ArrayList<Integer> func) {
-	int total = 0;
-	for(int i : func)
-	{
-		total = total + i;
+	private static int sum(ArrayList<Integer> func) {
+		int total = 0;
+		for(int i : func)
+		{
+			total = total + i;
+		}
+		return total;
 	}
-	return total;
-}
 
 
 }
