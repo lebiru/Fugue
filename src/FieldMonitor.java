@@ -11,7 +11,6 @@ public class FieldMonitor {
 	public static void monitorSys(int dataport, Graph g) throws IOException,
 			InterruptedException, ClassNotLoadedException {
 		HashMap<String, Integer> haveyouseen = new HashMap<String, Integer>();
-
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
@@ -23,12 +22,14 @@ public class FieldMonitor {
 			for (int j = 1; j < framecount; j++) {
 				List<LocalVariable> localvariables = stack.get(j)
 						.visibleVariables();
-				for (int k = 0; k < localvariables.size()-1; k++) {
+				for (int k = 0; k < localvariables.size(); k++) {
 					if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
+						Vertex Main = new Vertex(1, "Main", true);
+						g.addVertex(Main);
 						Search((ObjectReference) information, haveyouseen, g,
-								null);
+								Main);
 						System.out.println("EXECUTING \n\n\n\n");
 
 					}
@@ -54,49 +55,65 @@ public class FieldMonitor {
 			String key = name + or.uniqueID();
 			Value fieldValue = or.getValue(fields.get(i));
 			if (haveyouseen.containsKey(key) == false) {
-				if (haveyouseen.get(key) == null)
+				if (haveyouseen.get(key) == null) {
 					haveyouseen.put(key, 1);
-				if ((fieldValue instanceof ObjectReference)) {
-					String signature = fields.get(i).signature();
-					
-					
-					if (!signature.contains("java")) {
-						System.out.println("OBJECT Field: " + fieldValue
-								+ " name: " + name + " ID: " + or.uniqueID());
-						Vertex current = new Vertex((int) or.uniqueID(),
-								fieldValue.toString(), true);
-						
-						//If Vertex array is not empty, then create an edge
-						//Also, set current to equal previous
-						if (g.vertices.size()>=2) {
-							Edge e = new Edge((int) or.uniqueID(), prev, current, name);
-							g.addEdge(e);
-						}	
-						//Add a vertex
-						g.addVertex(current);
-						Search((ObjectReference) fieldValue, haveyouseen, g, current);
-					}
-					
-					//Search((ObjectReference) fieldValue, haveyouseen, g, current);
-
-				} else if (fieldValue instanceof IntegerValue) {
-					// else{
-					String signature = fields.get(i).signature();
-						System.out.println("Primative: " + fieldValue
-								+ "  fieldValue" + " name: " + name + " ID "
-								+ or.uniqueID() + "   " + signature);
-						
-						//Primative are never functions
-						Vertex current = (new Vertex((int) or.uniqueID(),
-								fieldValue.toString(), false));
-						g.addVertex(current);
-					
-					if (g.vertices.size()>=2) {
-						Edge e = new Edge((int) or.uniqueID(), prev, current, name);
-						g.addEdge(e);
-					} 
 				}
+				if ((fieldValue instanceof ObjectReference)) {
+					testInformation(fieldValue, name, or.uniqueID(), fields
+							.get(i).signature(), true);
+					Vertex current;
+					if (fieldValue.equals(null)) {
+						 current = new Vertex((int) or.uniqueID(),"EMPTY".toString(), true);
+					} else {
+						 current = new Vertex((int) or.uniqueID(),
+								fieldValue.toString(), true);
+					}
+					g.addVertex(current);
+					edgeCreation(g, prev, current, (int) or.uniqueID(),
+							fieldValue, true);
+					Search((ObjectReference) fieldValue, haveyouseen, g,
+							current);
+
+				} else {
+					testInformation(fieldValue, name, or.uniqueID(), fields
+							.get(i).signature(), false);
+					Vertex current;
+					if (fieldValue != null) {
+						current = new Vertex((int) or.uniqueID(),
+								fieldValue.toString(), false);
+					} else {
+						current = new Vertex((int) or.uniqueID(), "itsempty",
+								false);
+					}
+
+					g.addVertex(current);
+					edgeCreation(g, prev, current, (int) or.uniqueID(),
+							fieldValue, false);
+				}
+
 			}
 		}
 	}
+
+	public static void testInformation(Value fieldValue, String name, long ID,
+			String signature, boolean type) {
+		if (type == true)
+			System.out.println("OBJECT  Value: " + fieldValue + " String: "
+					+ name + " ID: " + ID + " Signature: " + signature);
+		else
+			System.out.println("PRIMATIVE  Value: " + fieldValue + " String: "
+					+ name + " ID: " + ID + " Signature: " + signature);
+
+	}
+
+	public static void edgeCreation(Graph g, Vertex prev, Vertex current,
+			int ID, Value fieldValue, boolean funcOrNot) {
+		if (fieldValue != null) {
+			g.addEdge(new Edge(ID, prev, current, "wef"));
+			
+		} else {
+			g.addEdge(new Edge(ID, prev, current, "wef"));
+		}
+	}
+
 }

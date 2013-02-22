@@ -40,8 +40,9 @@ public class Graph {
 
 		for(Edge e : edges.values())
 		{
-			System.out.println(graph.get(e.getSource().id));
+			System.out.println(graph.get(e.getSource().id) + " " + e.getSource().value);
 			ArrayList<Integer> newEdges = graph.get(e.getSource().id);
+			e.displayEdge();
 			newEdges.add(e.id);
 			graph.put((Integer)e.getSource().id, newEdges);
 		}

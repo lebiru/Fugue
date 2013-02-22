@@ -51,7 +51,7 @@ public class Main {
 
 
 		FieldMonitor m = new FieldMonitor();	
-		FieldMonitor.monitorSys(5000,g);
+		FieldMonitor.monitorSys(8620,g);
 		System.out.println("\n  DONE \n\n\n\n");
 
 		try 
