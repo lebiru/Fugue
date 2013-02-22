@@ -40,6 +40,7 @@ public class Graph {
 
 		for(Edge e : edges.values())
 		{
+			System.out.println(graph.get(e.getSource().id));
 			ArrayList<Integer> newEdges = graph.get(e.getSource().id);
 			newEdges.add(e.id);
 			graph.put((Integer)e.getSource().id, newEdges);
@@ -105,6 +106,11 @@ public class Graph {
 	public String getEdgeName(int id)
 	{
 		return edges.get(id).name;
+	}
+	
+	public int getVerticesSize()
+	{
+		return vertices.size();
 	}
 
 	/*DEPRECATED
@@ -184,12 +190,12 @@ public class Graph {
 	 */
 	public void displayGraph() 
 	{
-
+		System.out.println("HERE IS THE GRAPH");
 		for(Entry<Integer, ArrayList<Integer>> g : graph.entrySet())
 		{
 			int key = g.getKey();
 			ArrayList<Integer> value = g.getValue();
-			System.out.println("Vertex: " + key + ": [" + value.toString() + "]");
+			System.out.println("Vertex ID: " + key + " Value: " + vertices.get(key).value + "[" + value.toString() + "]");
 		}
 
 	}

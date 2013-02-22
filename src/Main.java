@@ -18,10 +18,10 @@ public class Main {
 
 		String os = System.getProperty("os.name");
 
-		if(os.contains("Windows")) //if Windows is the Operating System
+		//if(os.contains("Windows")) //if Windows is the Operating System
 
 		//WINDOWS
-		if(os.contains("Windows"))
+	/*	if(os.contains("Windows"))
 
 		{
 			Runtime.getRuntime().exec(
@@ -37,7 +37,7 @@ public class Main {
 		{
 			Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
 			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8620,server=y,suspend=n InterestingQueue").waitFor();
-		}
+		}*/
 
 
 
@@ -51,8 +51,8 @@ public class Main {
 
 
 		FieldMonitor m = new FieldMonitor();	
-		FieldMonitor.monitorSys(8640);
-
+		FieldMonitor.monitorSys(5000,g);
+		System.out.println("\n  DONE \n\n\n\n");
 
 		try 
 		{
@@ -62,11 +62,10 @@ public class Main {
 		{
 			Thread.currentThread().interrupt();
 		}
-
-		FieldMonitor.monitorSys(8600);
+		
 
 		//Graph test
-		g.dynamicTestFillGraph();
+		//g.dynamicTestFillGraph();
 		g.displayGraph();
 
 		// call function to draw graph
