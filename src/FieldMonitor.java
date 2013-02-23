@@ -71,6 +71,7 @@ public class FieldMonitor {
 					g.addVertex(current);
 					edgeCreation(g, prev, current, (int) or.uniqueID(),
 							fieldValue, true);
+					//Value newValue = fieldvalue 
 					Search((ObjectReference) fieldValue, haveyouseen, g,
 							current);
 
@@ -109,7 +110,7 @@ public class FieldMonitor {
 	public static void edgeCreation(Graph g, Vertex prev, Vertex current,
 			int ID, Value fieldValue, boolean funcOrNot) {
 		if (fieldValue != null) {
-			g.addEdge(new Edge(ID, prev, current, "wef"));
+			g.addEdge(new Edge(ID, prev, current, fieldValue.toString()));
 			
 		} else {
 			g.addEdge(new Edge(ID, prev, current, "wef"));
