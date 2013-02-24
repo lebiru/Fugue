@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class InterestingQueue {
         InterestingQueue next = null;
-       	int data;
+        int data;
 
         public InterestingQueue(int data)
         {

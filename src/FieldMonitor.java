@@ -48,8 +48,8 @@ public class FieldMonitor {
 			HashMap<String, Integer> haveyouseen, Graph g, Vertex prev)
 			throws InterruptedException, ClassNotLoadedException {
 
-		ReferenceType rt = or.referenceType();
-		List<Field> fields = rt.allFields();
+		
+		List<Field> fields = or.referenceType().allFields();
 		for (int i = 0; i < fields.size(); i++) {
 			String name = fields.get(i).name();
 			String key = name + or.uniqueID();
@@ -71,7 +71,6 @@ public class FieldMonitor {
 					g.addVertex(current);
 					edgeCreation(g, prev, current, (int) or.uniqueID(),
 							fieldValue, true);
-					//Value newValue = fieldvalue 
 					Search((ObjectReference) fieldValue, haveyouseen, g,
 							current);
 
