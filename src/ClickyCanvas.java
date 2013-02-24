@@ -136,7 +136,6 @@ public class ClickyCanvas extends Canvas {
 				edgeY[1] = coordinates.get(4);
 				edgeY[2] = coordinates.get(5);
 				visual.drawPolyline(edgeX, edgeY, 3);
-				//visual.drawLine(fromX, fromY, toX, toY);
 				// find coordinates to draw arrow
 				triCoordinates = findTriCordinates(coordinates);
 				triX[0] = triCoordinates.get(0);
@@ -147,8 +146,8 @@ public class ClickyCanvas extends Canvas {
 				triY[2] = triCoordinates.get(5);
 				visual.fillPolygon(triX, triY, 3);
 				// display the name of the edge
-				midX = (fromX + toX) / 2;
-				midY = (fromY + toY) / 2;
+				midX = edgeX[1];
+				midY = edgeY[1] + 10;
 				nameLength = inputGraph.edges.get(i).name.length();
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
@@ -171,9 +170,14 @@ public class ClickyCanvas extends Canvas {
 		}
 	}
 
-	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coor) {
+	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coorOutput) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> triCoor = new ArrayList<Integer>();
+		ArrayList<Integer> coor = new ArrayList<Integer>();
+		coor.add(coorOutput.get(0));
+		coor.add(coorOutput.get(3));
+		coor.add(coorOutput.get(2));
+		coor.add(coorOutput.get(5));
 		double angle = 0, deltaX, deltaY, sideLength = 10.0;
 		double remAngle, tempX, tempY;
 		// get the point touching the "to" vertex
@@ -225,7 +229,7 @@ public class ClickyCanvas extends Canvas {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> coor = new ArrayList<Integer>();
 		double angle, deltaX, deltaY;
-		double offset = 5.0;
+		double offset = 10.0;
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);
@@ -272,11 +276,10 @@ public class ClickyCanvas extends Canvas {
 		{
 			angle = angle + 180;
 		}
-		
-		int tempX = (coor.get(2) + coor.get(0)) / 2;
-		int tempY = (coor.get(5) + coor.get(3)) / 2;
+		int tempX = (coor.get(0) + coor.get(2)) / 2;
+		int tempY = (coor.get(3) + coor.get(5)) / 2;
 		tempX = (int) (tempX - offset*Math.cos(180 - (angle + 90)));
-		tempY = (int) (tempY - offset*Math.sin(180 - (angle + 90)));
+		tempY = (int) (tempY + offset*Math.sin(180 - (angle + 90)));
 		coor.set(1, tempX);
 		coor.set(4, tempY);
 		
