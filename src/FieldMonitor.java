@@ -26,10 +26,19 @@ public class FieldMonitor {
 					if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
-						Vertex Main = new Vertex(1, "Main", true);
-						g.addVertex(Main);
-						Search((ObjectReference) information, haveyouseen, g,
-								Main);
+
+						if (counter == 0) {
+							Vertex Main = new Vertex(1, "Main", true);
+							g.addVertex(Main);
+							Search((ObjectReference) information, haveyouseen,
+									g, Main);
+
+						} else {
+							Vertex Main = new Vertex(1, "Main", true);
+							Search((ObjectReference) information, haveyouseen,
+									g, Main);
+						}
+
 						System.out.println("EXECUTING \n\n\n\n");
 
 					}
@@ -47,50 +56,66 @@ public class FieldMonitor {
 	private static void Search(ObjectReference or,
 			HashMap<String, Integer> haveyouseen, Graph g, Vertex prev)
 			throws InterruptedException, ClassNotLoadedException {
+		Stack<ObjectReference> s = new Stack<ObjectReference>();
+		ObjectReference popped;
+		s.push(or);
 
-		
-		List<Field> fields = or.referenceType().allFields();
-		for (int i = 0; i < fields.size(); i++) {
-			String name = fields.get(i).name();
-			String key = name + or.uniqueID();
-			Value fieldValue = or.getValue(fields.get(i));
-			if (haveyouseen.containsKey(key) == false) {
-				if (haveyouseen.get(key) == null) {
+		while (!s.isEmpty()) {
+			popped = s.pop();
+			List<Field> fields = popped.referenceType().allFields();
+			for (int i = 0; i < fields.size(); i++) {
+
+				String name = fields.get(i).name();
+				String key = name + popped.uniqueID();
+				Value fieldValue = popped.getValue(fields.get(i));
+				if (haveyouseen.containsKey(key) == false) {
 					haveyouseen.put(key, 1);
-				}
-				if ((fieldValue instanceof ObjectReference)) {
-					testInformation(fieldValue, name, or.uniqueID(), fields
-							.get(i).signature(), true);
-					Vertex current;
-					if (fieldValue.equals(null)) {
-						 current = new Vertex((int) or.uniqueID(),"EMPTY".toString(), true);
+
+					if ((fieldValue instanceof ObjectReference)) {
+						// Type type = fields.get(i).type();
+						testInformation(fieldValue, name, popped.uniqueID(),
+								fields.get(i).signature(), true);
+
+						Vertex current;
+						if (fieldValue.equals(null)) {
+							current = new Vertex((int) popped.uniqueID(),
+									"EMPTY".toString(), true);
+							g.addVertex(current);
+						} else {
+							current = new Vertex((int) popped.uniqueID(), name,
+									true);
+							g.addVertex(current);
+						}
+						edgeCreation(g, prev, current, (int) popped.uniqueID(),
+								name, true);
+						// Search((ObjectReference) fieldValue, haveyouseen, g,
+						// current);
+						System.out.println("Previous --> Current: " + prev.value + " "+ prev.id
+								+ " --> " + current.value + " "+current.id);
+						prev = current;
+						s.push((ObjectReference) fieldValue);
+
+					
 					} else {
-						 current = new Vertex((int) or.uniqueID(),
-								fieldValue.toString(), true);
-					}
-					g.addVertex(current);
-					edgeCreation(g, prev, current, (int) or.uniqueID(),
-							fieldValue, true);
-					Search((ObjectReference) fieldValue, haveyouseen, g,
-							current);
-
-				} else {
-					testInformation(fieldValue, name, or.uniqueID(), fields
-							.get(i).signature(), false);
-					Vertex current;
-					if (fieldValue != null) {
-						current = new Vertex((int) or.uniqueID(),
-								fieldValue.toString(), false);
-					} else {
-						current = new Vertex((int) or.uniqueID(), "itsempty",
-								false);
+						testInformation(fieldValue, name, popped.uniqueID(),
+								fields.get(i).signature(), false);
+						Vertex current;
+						if (fieldValue != null) {
+							current = new Vertex((int) popped.uniqueID(),
+									fieldValue.toString(), false);
+						} else {
+							current = new Vertex((int) popped.uniqueID(),
+									"itsempty", false);
+						}
+						g.addVertex(current);
+						edgeCreation(g, prev, current, (int) popped.uniqueID(),
+								name, false);
+						System.out.println("Previous --> Current: " + prev.value + " "+ prev.id
+								+ " --> " + name + " "+current.id);
+				
 					}
 
-					g.addVertex(current);
-					edgeCreation(g, prev, current, (int) or.uniqueID(),
-							fieldValue, false);
 				}
-
 			}
 		}
 	}
@@ -107,10 +132,10 @@ public class FieldMonitor {
 	}
 
 	public static void edgeCreation(Graph g, Vertex prev, Vertex current,
-			int ID, Value fieldValue, boolean funcOrNot) {
-		if (fieldValue != null) {
-			g.addEdge(new Edge(ID, prev, current, fieldValue.toString()));
-			
+			int ID, String name, boolean funcOrNot) {
+		if (name != null) {
+			g.addEdge(new Edge(ID, prev, current, name.toString()));
+
 		} else {
 			g.addEdge(new Edge(ID, prev, current, "wef"));
 		}
