@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import com.sun.jdi.*;
+import com.sun.tools.corba.se.idl.constExpr.Positive;
 
 public class FieldMonitor {
-	static int counter = 0;
+	static int counter = 10;
 
 	public static void monitorSys(int dataport, Graph g) throws IOException,
 			InterruptedException, ClassNotLoadedException {
-		HashMap<String, Integer> haveyouseen = new HashMap<String, Integer>();
+		HashMap<Integer, Integer> haveyouseen = new HashMap<Integer, Integer>();
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
@@ -26,19 +27,10 @@ public class FieldMonitor {
 					if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
-
-						if (counter == 0) {
-							Vertex Main = new Vertex(1, "Main", true);
-							g.addVertex(Main);
-							Search((ObjectReference) information, haveyouseen,
-									g, Main);
-
-						} else {
-							Vertex Main = new Vertex(1, "Main", true);
-							Search((ObjectReference) information, haveyouseen,
-									g, Main);
-						}
-
+						Vertex Main = new Vertex(1, "Main", true);
+						g.addVertex(Main);
+						Search((ObjectReference) information, haveyouseen, g,
+								Main);
 						System.out.println("EXECUTING \n\n\n\n");
 
 					}
@@ -53,71 +45,55 @@ public class FieldMonitor {
 		g.updateGraph(g.vertices, g.edges);
 	}
 
-	private static void Search(ObjectReference or,
-			HashMap<String, Integer> haveyouseen, Graph g, Vertex prev)
-			throws InterruptedException, ClassNotLoadedException {
-		Stack<ObjectReference> s = new Stack<ObjectReference>();
-		ObjectReference popped;
-		s.push(or);
-
-		while (!s.isEmpty()) {
-			popped = s.pop();
-			List<Field> fields = popped.referenceType().allFields();
-			for (int i = 0; i < fields.size(); i++) {
-
+	private static void Search(ObjectReference or, HashMap<Integer, Integer> haveyouseen, Graph g, Vertex prev)
+			throws InterruptedException, ClassNotLoadedException 
+	{
+		List<Field> fields = or.referenceType().allFields();
+		for (int i = 0; i < fields.size(); i++) 
+		{
+			Value fieldValue = or.getValue(fields.get(i));
+			if(fieldValue instanceof ObjectReference) 
+			{
 				String name = fields.get(i).name();
-				String key = name + popped.uniqueID();
-				Value fieldValue = popped.getValue(fields.get(i));
-				if (haveyouseen.containsKey(key) == false) {
-					haveyouseen.put(key, 1);
-
-					if ((fieldValue instanceof ObjectReference)) {
-						// Type type = fields.get(i).type();
-						testInformation(fieldValue, name, popped.uniqueID(),
-								fields.get(i).signature(), true);
-
-						Vertex current;
-						if (fieldValue.equals(null)) {
-							current = new Vertex((int) popped.uniqueID(),
-									"EMPTY".toString(), true);
-							g.addVertex(current);
-						} else {
-							current = new Vertex((int) popped.uniqueID(), name,
-									true);
-							g.addVertex(current);
-						}
-						edgeCreation(g, prev, current, (int) popped.uniqueID(),
-								name, true);
-						// Search((ObjectReference) fieldValue, haveyouseen, g,
-						// current);
-						System.out.println("Previous --> Current: " + prev.value + " "+ prev.id
-								+ " --> " + current.value + " "+current.id);
-						prev = current;
-						s.push((ObjectReference) fieldValue);
-
-					
-					} else {
-						testInformation(fieldValue, name, popped.uniqueID(),
-								fields.get(i).signature(), false);
-						Vertex current;
-						if (fieldValue != null) {
-							current = new Vertex((int) popped.uniqueID(),
-									fieldValue.toString(), false);
-						} else {
-							current = new Vertex((int) popped.uniqueID(),
-									"itsempty", false);
-						}
-						g.addVertex(current);
-						edgeCreation(g, prev, current, (int) popped.uniqueID(),
-								name, false);
-						System.out.println("Previous --> Current: " + prev.value + " "+ prev.id
-								+ " --> " + name + " "+current.id);
-				
-					}
-
+				int key = (int)((ObjectReference) fieldValue).uniqueID();
+				if(haveyouseen.containsKey(key)==false)
+				{
+					haveyouseen.put(key,1);
+					Vertex current = new Vertex(key, name, false);
+					g.addVertex(current);
+					makeConnection(g, key, prev, current, fieldValue.toString());
+					Search((ObjectReference) fieldValue, haveyouseen, g, current);
+					System.out.println(key);
+				}
+				else 
+				{
+					Vertex current = new Vertex(key,name,false);
+					makeConnection(g, key, prev, current, fieldValue.toString());
+					//System.out.println(key);
 				}
 			}
+			
+			else if (fieldValue instanceof PrimitiveValue)
+			{
+				Vertex current = new Vertex(counter,fieldValue.toString(),false);
+				makeConnection(g,counter,prev,current, fieldValue.toString());
+				counter++;
+				System.out.println(counter);
+			}
+			
+			else 
+			{
+				System.out.println("Null Value");
+			}
+			
 		}
+	}
+
+	
+
+	private static void makeConnection(Graph g, int key, Vertex prev, Vertex current,
+			String string) {
+		g.addEdge(new Edge(key, prev, current, string));
 	}
 
 	public static void testInformation(Value fieldValue, String name, long ID,
@@ -130,15 +106,4 @@ public class FieldMonitor {
 					+ name + " ID: " + ID + " Signature: " + signature);
 
 	}
-
-	public static void edgeCreation(Graph g, Vertex prev, Vertex current,
-			int ID, String name, boolean funcOrNot) {
-		if (name != null) {
-			g.addEdge(new Edge(ID, prev, current, name.toString()));
-
-		} else {
-			g.addEdge(new Edge(ID, prev, current, "wef"));
-		}
-	}
-
 }
