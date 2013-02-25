@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-//import java.util.Random;
-
 
 public class Graph {
 
@@ -112,78 +110,6 @@ public class Graph {
 	public int getVerticesSize()
 	{
 		return vertices.size();
-	}
-
-	/*DEPRECATED
-	 * For testing purposes, fills a graph with random vertexes and edges.
-	 * Vertexes will not point to themselves.
-	 * A node can have multiple edges to another node. 
-	 */
-	public void staticTestFillGraph()
-	{
-
-		ArrayList<Integer> one = new ArrayList<Integer>();
-		ArrayList<Integer> two = new ArrayList<Integer>();
-		ArrayList<Integer> three = new ArrayList<Integer>();
-		ArrayList<Integer> four = new ArrayList<Integer>();
-
-		one.add(2);
-		one.add(1);
-
-		two.add(3);
-
-		three.add(4);
-
-		four.add(3);
-		four.add(2);
-
-		graph.put(1, one);
-		graph.put(2, two);
-		graph.put(3, three);
-		graph.put(4, four);
-
-	}
-
-
-	/*
-	 * This method tests dynamically filling a graph.
-	 * It is a model for the data gathering part. 
-	 * Make sure you give an ID number when adding new vertices/edges.
-	 */
-	public void dynamicTestFillGraph()
-	{
-
-		Vertex one = new Vertex(1, "Main", true);
-		Vertex two = new Vertex(2, "This is the test string", false);
-		Vertex three = new Vertex(3, "2.22", false);
-		Vertex four = new Vertex(4, "b", false);
-		Vertex five = new Vertex(11, "1.23143656", false);
-
-		Edge a = new Edge(5, one, one, "number333");
-		Edge b = new Edge(6, one, two, "testString");
-		Edge c = new Edge(7, two, three, "doubleVariable");
-		Edge d = new Edge(8, three, four, "characterVariable");
-		Edge e = new Edge(9, four, three, "doubleVariable");
-		Edge f = new Edge(10, four, two, "testString");
-		Edge g = new Edge(12, four, five, "floatVariable"); 
-
-
-		addVertex(one);
-		addVertex(two);
-		addVertex(three);
-		addVertex(four);
-		addVertex(five);
-
-		addEdge(a);
-		addEdge(b);
-		addEdge(c);
-		addEdge(d);
-		addEdge(e);
-		addEdge(f);
-		addEdge(g);
-
-		updateGraph(vertices, edges);
-
 	}
 
 	/*
