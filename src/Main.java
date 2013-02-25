@@ -14,14 +14,14 @@ public class Main {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth() - 10;
 		int height = (int)screenSize.getHeight() - 80;
-		Frame app = new Frame("Click me!");
+		Frame app = new Frame("Graph");
 
 		String os = System.getProperty("os.name");
 
 		//if(os.contains("Windows")) //if Windows is the Operating System
 
 		//WINDOWS
-	/*	if(os.contains("Windows"))
+		if(os.contains("Windows"))
 
 		{
 			Runtime.getRuntime().exec(
@@ -37,7 +37,7 @@ public class Main {
 		{
 			Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
 			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8620,server=y,suspend=n InterestingQueue").waitFor();
-		}*/
+		}
 
 
 
