@@ -65,7 +65,6 @@ public class Main {
 		
 
 		//Graph test
-		//g.dynamicTestFillGraph();
 		g.displayGraph();
 
 		// call function to draw graph
