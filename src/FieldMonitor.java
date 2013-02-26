@@ -6,7 +6,7 @@ import com.sun.jdi.*;
 
 public class FieldMonitor {
 	static int counter = 300;
-	static int maxValue = 32;
+	static int maxValue = 2;
 
 	public static void monitorSys(int dataport, Graph g) throws IOException,
 			InterruptedException, ClassNotLoadedException {
