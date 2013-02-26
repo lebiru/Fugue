@@ -7,7 +7,7 @@ import com.sun.jdi.*;
 import com.sun.tools.corba.se.idl.constExpr.Positive;
 
 public class FieldMonitor {
-	static int counter = 101;
+	static int counter = 100;
 
 	public static void monitorSys(int dataport, Graph g) throws IOException,
 			InterruptedException, ClassNotLoadedException 
@@ -29,7 +29,7 @@ public class FieldMonitor {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
 												
-						Vertex Main = new Vertex(100, "Main", true);
+						Vertex Main = new Vertex(0, "Main", true);
 						g.addVertex(Main);
 						Search((ObjectReference) information, haveyouseen, g,
 								Main);
@@ -52,6 +52,7 @@ public class FieldMonitor {
 		for (int i = 0; i < fields.size(); i++) 
 		{
 			Value fieldValue = or.getValue(fields.get(i));
+			
 			if(fieldValue instanceof ObjectReference) 
 			{
 				String name = fields.get(i).name();
@@ -59,25 +60,36 @@ public class FieldMonitor {
 				if(haveyouseen.containsKey(key)==false)
 				{
 					haveyouseen.put(key,1);
+					//Special Case for the Integer Class
+					/*if(fields.get(i).toString().contains("java.lang.Integer")){
+						Search((ObjectReference) fieldValue, haveyouseen, g, prev);
+					}
+					else*/
+					{
 					Vertex current = new Vertex(key, "Node", false);
 					g.addVertex(current);
 					makeConnection(g, key, prev, current, name);
 					Search((ObjectReference) fieldValue, haveyouseen, g, current);
+					//System.out.println(fieldValue + "  "+fields.get(i) + "   ");
+	
+					}
 				}
 				else 
 				{
 					Vertex current = new Vertex(key,"Node",false);
 					makeConnection(g, key, prev, current, name);
+		
 				}
 			}
 			
 			else if (fieldValue instanceof PrimitiveValue)
 			{
-				System.out.println(fieldValue.toString());
 				Vertex current = new Vertex(counter,fieldValue.toString(),false);
 				makeConnection(g,counter,prev,current, fields.get(i).name());
 				counter++;
-				//System.out.println(counter);
+				
+			
+				//System.out.println(fieldValue + "  "+fields.get(i) + "   ");
 			}
 			
 			else 
