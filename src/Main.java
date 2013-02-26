@@ -51,8 +51,7 @@ public class Main {
 
 
 		FieldMonitor m = new FieldMonitor();	
-		FieldMonitor.monitorSys(9001,g);
-		Thread.sleep(1000);
+		FieldMonitor.monitorSys(9000,g);
 		g.updateGraph(g.vertices, g.edges);
 		System.out.println("\n  DONE \n\n\n\n");
 
