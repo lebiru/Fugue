@@ -14,6 +14,7 @@ public class FieldMonitor {
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
+		boolean activated = false;
 		try {
 
 			maxIDsearch(vm);
@@ -31,9 +32,12 @@ public class FieldMonitor {
 									localvariables.get(k));
 
 							Vertex Main = new Vertex(1, "Main", true);
-							g.addVertex(Main);
-							Search((ObjectReference) information, haveyouseen,
-									g, Main);
+							if (activated == false) 
+							{
+								g.addVertex(Main);
+								activated = true;
+							}
+							Search((ObjectReference) information, haveyouseen, g, Main);
 						}
 					}
 				}
@@ -48,7 +52,8 @@ public class FieldMonitor {
 
 	private static void Search(ObjectReference or,
 			ArrayList<Integer> haveyouseen, Graph g, Vertex prev)
-			throws InterruptedException, ClassNotLoadedException {
+			throws InterruptedException, ClassNotLoadedException 
+	{
 		List<Field> fields = or.referenceType().allFields();
 		for (int i = 0; i < fields.size(); i++) {
 			Value fieldValue = or.getValue(fields.get(i));
@@ -60,11 +65,9 @@ public class FieldMonitor {
 				if (haveyouseen.contains(key) == false) {
 					haveyouseen.add(key);
 					if (fieldValue.toString().contains("java.lang.Integer")) {
-						createGraph(g, fieldValue, prev, name, key,i,or);
+						createGraph(g, fieldValue, prev, name, key, i, or);
 					} else {
-						Vertex current = new Vertex(key, "Value: "
-								+ fields.get(i).typeName() + " ID: " + key,
-								false);
+						Vertex current = new Vertex(key, "Value: " + fields.get(i).typeName() + " ID: " + key, false);
 						g.addVertex(current);
 						makeConnection(g, maxValue, prev, current, name);
 						maxValue++;
@@ -74,9 +77,9 @@ public class FieldMonitor {
 				}
 
 				else {
-					//Vertex current = g.getVertex(key);
-					//makeConnection(g, maxValue, prev, current, name);
-					//maxValue++;
+					// Vertex current = g.getVertex(key);
+					// makeConnection(g, maxValue, prev, current, name);
+					// maxValue++;
 				}
 			}
 
@@ -99,11 +102,13 @@ public class FieldMonitor {
 
 	private static void createGraph(Graph g, Value fieldValue, Vertex prev,
 			String name, int key, int i, ObjectReference or) {
-		Field intFields = ((ObjectReference) fieldValue).referenceType().fieldByName("value");
+		Field intFields = ((ObjectReference) fieldValue).referenceType()
+				.fieldByName("value");
 		if (intFields.toString().contains("value")) {
-			String val =((ObjectReference) fieldValue).getValue(intFields).toString();
-			Vertex current = new Vertex(maxValue, "Value: "
-					+ val + " ID: " + maxValue, false);
+			String val = ((ObjectReference) fieldValue).getValue(intFields)
+					.toString();
+			Vertex current = new Vertex(maxValue, "Value: " + val + " ID: "
+					+ maxValue, false);
 			g.addVertex(current);
 			maxValue++;
 			makeConnection(g, maxValue, prev, current, name);
