@@ -53,22 +53,21 @@ public class FieldMonitor {
 		g.updateGraph(g.vertices, g.edges);
 	}
 
-	private static void Search(ObjectReference or,
-			HashMap<String, Integer> haveyouseen, Graph g, Vertex prev)
+	private static void Search(ObjectReference or, HashMap<String, Integer> haveyouseen, Graph g, Vertex prev)
 			throws InterruptedException, ClassNotLoadedException {
-		Stack<ObjectReference> s = new Stack<ObjectReference>();
+		Stack<ObjectReference> stack = new Stack<ObjectReference>();
 		ObjectReference popped;
-		s.push(or);
-
-		while (!s.isEmpty()) {
-			popped = s.pop();
+		stack.push(or);
+		Vertex temp = prev; 
+		while (!stack.isEmpty()) {
+			popped = stack.pop();
 			List<Field> fields = popped.referenceType().allFields();
 			for (int i = 0; i < fields.size(); i++) {
 
 				String name = fields.get(i).name();
 				String key = name + popped.uniqueID();
 				Value fieldValue = popped.getValue(fields.get(i));
-				if (haveyouseen.containsKey(key) == false) {
+				if (haveyouseen.containsKey(key) != true) {
 					haveyouseen.put(key, 1);
 
 					if ((fieldValue instanceof ObjectReference)) {
@@ -93,7 +92,7 @@ public class FieldMonitor {
 						System.out.println("Previous --> Current: " + prev.value + " "+ prev.id
 								+ " --> " + current.value + " "+current.id);
 						prev = current;
-						s.push((ObjectReference) fieldValue);
+						stack.push((ObjectReference) fieldValue);
 
 					
 					} else {
