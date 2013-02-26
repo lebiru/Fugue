@@ -60,26 +60,23 @@ public class FieldMonitor {
 				if (haveyouseen.contains(key) == false) {
 					haveyouseen.add(key);
 					if (fieldValue.toString().contains("java.lang.Integer")) {
-						createGraph(g, fieldValue, prev, name, key);
+						createGraph(g, fieldValue, prev, name, key,i,or);
 					} else {
 						Vertex current = new Vertex(key, "Value: "
 								+ fields.get(i).typeName() + " ID: " + key,
 								false);
 						g.addVertex(current);
-						counter++;
-						makeConnection(g, counter, prev, current, name);
+						makeConnection(g, maxValue, prev, current, name);
+						maxValue++;
 						Search((ObjectReference) fieldValue, haveyouseen, g,
 								current);
 					}
 				}
 
 				else {
-
-					counter++;
-
-					Vertex current = g.getVertex(key);
-
-					makeConnection(g, counter, prev, current, name);
+					//Vertex current = g.getVertex(key);
+					//makeConnection(g, maxValue, prev, current, name);
+					//maxValue++;
 				}
 			}
 
@@ -87,10 +84,9 @@ public class FieldMonitor {
 				Vertex current = new Vertex(maxValue, "Value: "
 						+ fieldValue.toString() + "  ID: " + maxValue, false);
 				g.addVertex(current);
-				makeConnection(g, counter, prev, current, fields.get(i).name());
 				maxValue++;
-				counter++;
-
+				makeConnection(g, maxValue, prev, current, fields.get(i).name());
+				maxValue++;
 			}
 
 			// The where we find a null value, we can ignore it
@@ -102,16 +98,16 @@ public class FieldMonitor {
 	}
 
 	private static void createGraph(Graph g, Value fieldValue, Vertex prev,
-			String name, int key) {
-		Field intFields = ((ObjectReference) fieldValue).referenceType()
-				.fieldByName("value");
+			String name, int key, int i, ObjectReference or) {
+		Field intFields = ((ObjectReference) fieldValue).referenceType().fieldByName("value");
 		if (intFields.toString().contains("value")) {
-			Vertex current = new Vertex(maxValue, "Node: "
-					+ intFields.typeName() + " ID: " + key, false);
+			String val =((ObjectReference) fieldValue).getValue(intFields).toString();
+			Vertex current = new Vertex(maxValue, "Value: "
+					+ val + " ID: " + maxValue, false);
 			g.addVertex(current);
-			makeConnection(g, counter, prev, current, name);
 			maxValue++;
-			counter++;
+			makeConnection(g, maxValue, prev, current, name);
+			maxValue++;
 		}
 	}
 
@@ -170,9 +166,6 @@ public class FieldMonitor {
 					idValueSearch((ObjectReference) information, hashId);
 				}
 			}
-
 		}
-
 	}
-
 }
