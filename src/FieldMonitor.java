@@ -7,8 +7,8 @@ import com.sun.jdi.*;
 import com.sun.tools.corba.se.idl.constExpr.Positive;
 
 public class FieldMonitor {
-	static int counter = 200;
-	static int maxValue = 31;
+	static int counter = 300;
+	static int maxValue = 32;
 
 	public static void monitorSys(int dataport, Graph g) throws IOException,
 			InterruptedException, ClassNotLoadedException {
@@ -23,6 +23,7 @@ public class FieldMonitor {
 			stack = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
 			maxValue++;
+			System.out.println(maxValue+"\n\n\n\n\n");
 			{
 				for (int j = 1; j < framecount; j++) {
 					List<LocalVariable> localvariables = stack.get(j)
@@ -49,49 +50,54 @@ public class FieldMonitor {
 		g.updateGraph(g.vertices, g.edges);
 	}
 
-
-
-	private static void Search(ObjectReference or,
-			ArrayList<Integer>haveyouseen, Graph g, Vertex prev)
-			throws InterruptedException, ClassNotLoadedException {
+	private static void Search(ObjectReference or, ArrayList<Integer> haveyouseen, Graph g, Vertex prev)
+			throws InterruptedException, ClassNotLoadedException 
+	{
 		List<Field> fields = or.referenceType().allFields();
 		for (int i = 0; i < fields.size(); i++) {
 			Value fieldValue = or.getValue(fields.get(i));
-			//Creates vertex, edge and runs DFS until it his primative value
+			
 			if (fieldValue instanceof ObjectReference) 
 			{
 				String name = fields.get(i).name();
 				int key = (int) ((ObjectReference) fieldValue).uniqueID();
-				//Stores visited vertex in the cache
-				if (haveyouseen.contains(key) == false) {
-					haveyouseen.add(key);
-					Vertex current = new Vertex(key, "Node: "+fields.get(i).typeName()+ " ID: " + key, false);
-					g.addVertex(current);
-					counter++;
-					makeConnection(g, counter, prev, current, name);
-					Search((ObjectReference) fieldValue, haveyouseen, g, current);
-				} 
-				//If already seen, just create a connection to it
-				else 
+
+				if (haveyouseen.contains(key) == false) 
 				{
+					haveyouseen.add(key);
+					if (fieldValue.toString().contains("java.lang.Integer")) {
+						createGraph(g, fieldValue, prev, name, key);
+					} else {
+						Vertex current = new Vertex(key, "Value: "+ fieldValue.toString() + " ID: " + maxValue, false);
+						g.addVertex(current);
+						counter++;
+						makeConnection(g, counter, prev, current, name);
+						Search((ObjectReference) fieldValue, haveyouseen, g,
+								current);
+					}
+				}
+
+				else {
+
 					counter++;
-					//Gets a declared vertex from its hashMap
+
 					Vertex current = g.getVertex(key);
-					//Creates a connection
+
 					makeConnection(g, counter, prev, current, name);
 				}
 			}
 
-			//If primative value, then create the vertex and edges 
+
 			else if (fieldValue instanceof PrimitiveValue) {
-				
-				Vertex current = new Vertex(maxValue, "Value: "+fieldValue.toString()
-						+ "  ID: " + counter, false);
+
+				int key = (int) ((ObjectReference) fieldValue).uniqueID();
+				Vertex current = new Vertex(maxValue, "Value: "
+						+ fieldValue.toString() + "  ID: " + maxValue, false);
 				g.addVertex(current);
 				makeConnection(g, counter, prev, current, fields.get(i).name());
 				maxValue++;
 				counter++;
-				
+
 			}
 
 			// The where we find a null value, we can ignore it
@@ -99,6 +105,20 @@ public class FieldMonitor {
 				System.out.println("Null Value");
 			}
 
+		}
+	}
+
+	private static void createGraph(Graph g, Value fieldValue, Vertex prev,
+			String name, int key) {
+		Field intFields = ((ObjectReference) fieldValue).referenceType()
+				.fieldByName("value");
+		if (intFields.toString().contains("value")) {
+			Vertex current = new Vertex(maxValue, "Node: "
+					+ intFields.typeName() + " ID: " + key, false);
+			g.addVertex(current);
+			makeConnection(g, counter, prev, current, name);
+			maxValue++;
+			counter++;
 		}
 	}
 
@@ -131,11 +151,12 @@ public class FieldMonitor {
 					haveyouseen.put(key, 1);
 					maxValue = Math.max(maxValue, key);
 					idValueSearch((ObjectReference) fieldValue, haveyouseen);
+					System.out.println(fieldValue);
 				}
 			}
 		}
 	}
-	
+
 	private static void maxIDsearch(VirtualMachine vm)
 			throws IncompatibleThreadStateException,
 			AbsentInformationException, InterruptedException,
