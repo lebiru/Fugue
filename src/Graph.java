@@ -8,6 +8,8 @@ public class Graph {
 
 	HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 	HashMap<Integer, Edge> edges = new HashMap<Integer, Edge>();
+	int reinstatedID = 1;
+
 
 	public Graph()
 	{
@@ -29,7 +31,13 @@ public class Graph {
 	public void updateGraph(HashMap<Integer, Vertex> vertices, HashMap<Integer, Edge> edges)
 	{
 
+		resetID();
+
 		graph = new HashMap<Integer, ArrayList<Integer>>();
+
+
+		int temp = fixVertexID(vertices, reinstatedID);
+		fixEdgeID(edges, reinstatedID, temp);
 
 		for(Vertex v : vertices.values())
 		{
@@ -45,7 +53,61 @@ public class Graph {
 			graph.put((Integer)e.getSource().id, newEdges);
 		}
 
+
+
 	}
+
+	private void resetID() 
+	{
+		this.reinstatedID = 1;
+	}
+
+	private int fixVertexID(HashMap<Integer, Vertex> vertices, int reinstatedID) 
+	{
+		
+		for (Integer i : vertices.keySet()) 
+		{
+			i = reinstatedID;
+			System.out.println("Key: " + i);
+			reinstatedID++;
+			
+		}
+		
+		reinstatedID = 1;
+		
+		for (Vertex v : vertices.values())
+		{
+			v.id = reinstatedID;
+			System.out.println("Value: " + v.id);
+			reinstatedID++;
+		}
+		
+		return reinstatedID;
+		
+	}
+
+	private void fixEdgeID(HashMap<Integer, Edge> edges, int reinstatedID, int temp) 
+	{
+		int temporary = temp;
+		for (Integer i : edges.keySet()) 
+		{
+			i = temp;
+			System.out.println("Key: " + i);
+			temp++;
+		}
+		
+		temp = temporary;
+		
+		for (Edge e : edges.values())
+		{
+			e.id = temp;
+			System.out.println("Value: " + e.id);
+			temp++;
+		}
+	}
+	
+
+
 
 	/*
 	 * Returns the graph.
@@ -106,7 +168,7 @@ public class Graph {
 	{
 		return edges.get(id).name;
 	}
-	
+
 	public int getVerticesSize()
 	{
 		return vertices.size();

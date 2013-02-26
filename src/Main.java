@@ -52,6 +52,7 @@ public class Main {
 
 		FieldMonitor m = new FieldMonitor();	
 		FieldMonitor.monitorSys(9000,g);
+		g.updateGraph(g.vertices, g.edges);
 		System.out.println("\n  DONE \n\n\n\n");
 
 		try 
@@ -65,7 +66,7 @@ public class Main {
 		
 
 		//Graph test
-		//g.displayGraph();
+		g.displayGraph();
 
 		// call function to draw graph
 		ClickyCanvas c = new ClickyCanvas(g);

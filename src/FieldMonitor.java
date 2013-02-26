@@ -46,8 +46,6 @@ public class FieldMonitor {
 		} catch (AbsentInformationException e) {
 			e.printStackTrace();
 		}
-
-		g.updateGraph(g.vertices, g.edges);
 	}
 
 	private static void Search(ObjectReference or, ArrayList<Integer> haveyouseen, Graph g, Vertex prev)
@@ -90,7 +88,7 @@ public class FieldMonitor {
 
 			else if (fieldValue instanceof PrimitiveValue) {
 
-				int key = (int) ((ObjectReference) fieldValue).uniqueID();
+				//int key = (int) ((ObjectReference) fieldValue).uniqueID();
 				Vertex current = new Vertex(maxValue, "Value: "
 						+ fieldValue.toString() + "  ID: " + maxValue, false);
 				g.addVertex(current);
