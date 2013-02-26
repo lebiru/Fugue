@@ -2,9 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
 import com.sun.jdi.*;
-import com.sun.tools.corba.se.idl.constExpr.Positive;
 
 public class FieldMonitor {
 	static int counter = 300;
@@ -23,7 +21,6 @@ public class FieldMonitor {
 			stack = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
 			maxValue++;
-			System.out.println(maxValue+"\n\n\n\n\n");
 			{
 				for (int j = 1; j < framecount; j++) {
 					List<LocalVariable> localvariables = stack.get(j)
@@ -46,27 +43,28 @@ public class FieldMonitor {
 		} catch (AbsentInformationException e) {
 			e.printStackTrace();
 		}
+
 	}
 
-	private static void Search(ObjectReference or, ArrayList<Integer> haveyouseen, Graph g, Vertex prev)
-			throws InterruptedException, ClassNotLoadedException 
-	{
+	private static void Search(ObjectReference or,
+			ArrayList<Integer> haveyouseen, Graph g, Vertex prev)
+			throws InterruptedException, ClassNotLoadedException {
 		List<Field> fields = or.referenceType().allFields();
 		for (int i = 0; i < fields.size(); i++) {
 			Value fieldValue = or.getValue(fields.get(i));
-			
-			if (fieldValue instanceof ObjectReference) 
-			{
+
+			if (fieldValue instanceof ObjectReference) {
 				String name = fields.get(i).name();
 				int key = (int) ((ObjectReference) fieldValue).uniqueID();
 
-				if (haveyouseen.contains(key) == false) 
-				{
+				if (haveyouseen.contains(key) == false) {
 					haveyouseen.add(key);
 					if (fieldValue.toString().contains("java.lang.Integer")) {
 						createGraph(g, fieldValue, prev, name, key);
 					} else {
-						Vertex current = new Vertex(key, "Value: "+ fieldValue.toString() + " ID: " + maxValue, false);
+						Vertex current = new Vertex(key, "Value: "
+								+ fields.get(i).typeName() + " ID: " + key,
+								false);
 						g.addVertex(current);
 						counter++;
 						makeConnection(g, counter, prev, current, name);
@@ -85,10 +83,9 @@ public class FieldMonitor {
 				}
 			}
 
-
 			else if (fieldValue instanceof PrimitiveValue) {
 
-				//int key = (int) ((ObjectReference) fieldValue).uniqueID();
+
 				Vertex current = new Vertex(maxValue, "Value: "
 						+ fieldValue.toString() + "  ID: " + maxValue, false);
 				g.addVertex(current);
@@ -100,7 +97,7 @@ public class FieldMonitor {
 
 			// The where we find a null value, we can ignore it
 			else {
-				System.out.println("Null Value");
+				//System.out.println("Null Value");
 			}
 
 		}

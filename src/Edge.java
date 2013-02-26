@@ -51,9 +51,10 @@ public class Edge {
 	}
 
 
-	public void setid(int id)
+	public Edge setID(int id)
 	{
 		this.id = id;
+		return this;
 	}
 
 	public Vertex getSource()

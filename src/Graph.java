@@ -37,7 +37,7 @@ public class Graph {
 
 
 		int temp = fixVertexID(vertices, reinstatedID);
-		fixEdgeID(edges, reinstatedID, temp);
+		fixEdgeID(edges, temp);
 
 		for(Vertex v : vertices.values())
 		{
@@ -67,43 +67,26 @@ public class Graph {
 		
 		for (Integer i : vertices.keySet()) 
 		{
-			i = reinstatedID;
-			System.out.println("Key: " + i);
+			vertices.put(reinstatedID, vertices.get(i).setID(reinstatedID));
+			System.out.println(" Vertex Key: " + reinstatedID);
 			reinstatedID++;
 			
-		}
-		
-		reinstatedID = 1;
-		
-		for (Vertex v : vertices.values())
-		{
-			v.id = reinstatedID;
-			System.out.println("Value: " + v.id);
-			reinstatedID++;
 		}
 		
 		return reinstatedID;
 		
 	}
 
-	private void fixEdgeID(HashMap<Integer, Edge> edges, int reinstatedID, int temp) 
+	private void fixEdgeID(HashMap<Integer, Edge> edges, int reinstatedID) 
 	{
-		int temporary = temp;
+		
 		for (Integer i : edges.keySet()) 
 		{
-			i = temp;
-			System.out.println("Key: " + i);
-			temp++;
+			edges.put(reinstatedID, edges.get(i).setID(reinstatedID));
+			System.out.println("Edge Key: " + reinstatedID);
+			reinstatedID++;
 		}
 		
-		temp = temporary;
-		
-		for (Edge e : edges.values())
-		{
-			e.id = temp;
-			System.out.println("Value: " + e.id);
-			temp++;
-		}
 	}
 	
 
