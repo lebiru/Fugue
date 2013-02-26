@@ -14,14 +14,14 @@ public class Main {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth() - 10;
 		int height = (int)screenSize.getHeight() - 80;
-		Frame app = new Frame("Click me!");
+		Frame app = new Frame("Graph");
 
 		String os = System.getProperty("os.name");
 
 		//if(os.contains("Windows")) //if Windows is the Operating System
 
 		//WINDOWS
-	/*	if(os.contains("Windows"))
+		if(os.contains("Windows"))
 
 		{
 			Runtime.getRuntime().exec(
@@ -30,14 +30,14 @@ public class Main {
 							"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\";" +
 					"\"C:\\Program Files (x86)\\Java\\jdk1.7.0_13\\lib\\tools.jar\"");
 			Runtime.getRuntime().exec("cmd javac -g InterestingQueue.java");
-			Runtime.getRuntime().exec("cmd java -Xdebug -Xrunjdwp:transport=dt_socket,address=8600,server=y,suspend=n InterestingQueue").waitFor();
+			Runtime.getRuntime().exec("cmd java -Xdebug -Xrunjdwp:transport=dt_socket,address=9000,server=y,suspend=n InterestingQueue").waitFor();
 		}
 		//UNIX
 		else 
 		{
 			Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
-			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=8620,server=y,suspend=n InterestingQueue").waitFor();
-		}*/
+			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=9000,server=y,suspend=n InterestingQueue").waitFor();
+		}
 
 
 
@@ -51,7 +51,7 @@ public class Main {
 
 
 		FieldMonitor m = new FieldMonitor();	
-		FieldMonitor.monitorSys(8620,g);
+		FieldMonitor.monitorSys(9000,g);
 		System.out.println("\n  DONE \n\n\n\n");
 
 		try 
@@ -65,8 +65,7 @@ public class Main {
 		
 
 		//Graph test
-		//g.dynamicTestFillGraph();
-		g.displayGraph();
+		//g.displayGraph();
 
 		// call function to draw graph
 		ClickyCanvas c = new ClickyCanvas(g);

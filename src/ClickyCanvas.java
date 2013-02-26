@@ -64,6 +64,11 @@ public class ClickyCanvas extends Canvas {
 
 		for(int i : inputGraph.vertices.keySet())
 		{
+			if(y > height)
+			{
+				y = 50;
+				x = x + 300;
+			}
 			// draw the vertex
 			if(inputGraph.vertices.get(i).isAFunction) //function
 			{
@@ -168,8 +173,31 @@ public class ClickyCanvas extends Canvas {
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
 		}
+		// Add scroll bar if necessary
+		
 	}
-
+	/*
+	public void initpaint(Graphics g)
+	{
+		try
+		{
+			buffImage = this.createImage(rw, rh);
+			offscreen = buffImage.getGraphics();
+		    offscreen.setColor(b);
+		    offscreen.fillRect(0, 0, rw, rh);
+		    offscreen.setColor(f);
+		    offscreen.setFont(new Font("Courier", Font.ITALIC, 42));
+		    offscreen.drawString("Hello World!", 0, 50);
+		    initDone = true;
+		    g.drawImage(buffImage,0,0, this);
+		}
+		catch (Exception e)
+		{
+			System.out.println("oups...");
+		}
+	}
+	*/
+	
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coorOutput) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> triCoor = new ArrayList<Integer>();
