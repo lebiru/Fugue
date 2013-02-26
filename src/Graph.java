@@ -8,7 +8,7 @@ public class Graph {
 
 	HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 	HashMap<Integer, Edge> edges = new HashMap<Integer, Edge>();
-	int reinstatedID = 1;
+	int reinstatedID = 1; //IDs start at 1000
 
 
 	public Graph()
@@ -62,30 +62,47 @@ public class Graph {
 		this.reinstatedID = 1;
 	}
 
+	/*
+	 * Sequentially gives every Vertex an ID, beginning at 1 (reinstatedID)
+	 */
 	private int fixVertexID(HashMap<Integer, Vertex> vertices, int reinstatedID) 
 	{
-		
+		HashMap<Integer, Vertex> vertices2 = new HashMap<Integer, Vertex>();
 		for (Integer i : vertices.keySet()) 
 		{
-			vertices.put(reinstatedID, vertices.get(i).setID(reinstatedID));
+			Vertex v = vertices.get(i);
+			v.setID(reinstatedID);
+			vertices2.put(reinstatedID, v);
 			System.out.println(" Vertex Key: " + reinstatedID);
 			reinstatedID++;
 			
 		}
 		
+		this.vertices = vertices2;
+		
 		return reinstatedID;
 		
 	}
 
+	
+	/*
+	 *Sequentially gives every edge a concurrent ID, beginning from the last ID of the last Vertex 
+	 */
 	private void fixEdgeID(HashMap<Integer, Edge> edges, int reinstatedID) 
 	{
 		
+		HashMap<Integer, Edge> edges2 = new HashMap<Integer, Edge>();
 		for (Integer i : edges.keySet()) 
 		{
-			edges.put(reinstatedID, edges.get(i).setID(reinstatedID));
-			System.out.println("Edge Key: " + reinstatedID);
+			Edge e = edges.get(i);
+			e.setID(reinstatedID);
+			edges2.put(reinstatedID, e);
+			System.out.println(" Vertex Key: " + reinstatedID);
 			reinstatedID++;
+			
 		}
+		
+		this.edges = edges2;
 		
 	}
 	
@@ -167,7 +184,12 @@ public class Graph {
 		{
 			int key = g.getKey();
 			ArrayList<Integer> value = g.getValue();
-			System.out.println("Vertex ID: " + key + " Value: " + vertices.get(key).value + "[" + value.toString() + "]");
+			System.out.println("Vertex ID: " + key + " || " + vertices.get(key).value + " ||  Edges for Vertex: [" + value.toString() + "]");
+		}
+		
+		for (Integer i : edges.keySet()) 
+		{
+			edges.get(i).displayEdge();
 		}
 
 	}
