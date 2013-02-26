@@ -67,6 +67,7 @@ public class FieldMonitor {
 					if (fieldValue.toString().contains("java.lang.Integer")) {
 						createGraph(g, fieldValue, prev, name, key, i, or);
 					} else {
+						System.out.println(key);
 						Vertex current = new Vertex(key, "Value: " + fields.get(i).typeName() + " ID: " + key, false);
 						g.addVertex(current);
 						makeConnection(g, maxValue, prev, current, name);
@@ -84,6 +85,7 @@ public class FieldMonitor {
 			}
 
 			else if (fieldValue instanceof PrimitiveValue) {
+				System.out.println(maxValue);
 				Vertex current = new Vertex(maxValue, "Value: "
 						+ fieldValue.toString() + "  ID: " + maxValue, false);
 				g.addVertex(current);
@@ -107,6 +109,7 @@ public class FieldMonitor {
 		if (intFields.toString().contains("value")) {
 			String val = ((ObjectReference) fieldValue).getValue(intFields)
 					.toString();
+			System.out.println(maxValue);
 			Vertex current = new Vertex(maxValue, "Value: " + val + " ID: "
 					+ maxValue, false);
 			g.addVertex(current);

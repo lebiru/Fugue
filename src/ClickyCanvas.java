@@ -59,12 +59,12 @@ public class ClickyCanvas extends Canvas {
 		}
 		numFunctions = sum(func);
 		section = (double)width / numFunctions;
-		int x = 0, y = 0, changeX = 1, count = 0;
+		int x = 0, y = 0, changeX = 0, count = 0, countF = 0;
 
 
 		for(int i : inputGraph.vertices.keySet())
 		{
-			if(y > height)
+			if(y > (height - 250))
 			{
 				y = 50;
 				x = x + 300;
@@ -77,6 +77,7 @@ public class ClickyCanvas extends Canvas {
 				// always start functions 50 from top
 				y = 50;
 				changeX = 1;
+				countF = countF + 1; //function count
 				count = 0;
 
 				// draw rectangle for functions
@@ -86,6 +87,16 @@ public class ClickyCanvas extends Canvas {
 			{
 				// first object of the function moves over,
 				//   the rest will be aligned under it
+				if(countF == 0 && count == 0)
+				{
+					y = 50;
+					x = 30;
+					count++;
+				}
+				/*else if(countF == 0)
+				{
+					count++;
+				}*/
 				if(changeX == 1)
 				{
 					x = x + 250;
@@ -104,7 +115,7 @@ public class ClickyCanvas extends Canvas {
 					{
 						x = x - 20;
 					}
-					count = count + 1;
+					count++;
 				}
 				// draw rectangle for functions
 				visual.drawRoundRect(x, y, 150, 20, 20, 20);
@@ -118,10 +129,11 @@ public class ClickyCanvas extends Canvas {
 			// modify this function to only return the edges for a specific vertex 
 
 		}
-
+		
 		visual.setColor(Color.RED);
 		for(int i : inputGraph.edges.keySet())
 		{
+			System.out.println(i);
 			// draw the arrow for the edge
 			from = inputGraph.edges.get(i).source.id;
 			fromX = idX.get(from);
@@ -173,30 +185,7 @@ public class ClickyCanvas extends Canvas {
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
 		}
-		// Add scroll bar if necessary
-		
 	}
-	/*
-	public void initpaint(Graphics g)
-	{
-		try
-		{
-			buffImage = this.createImage(rw, rh);
-			offscreen = buffImage.getGraphics();
-		    offscreen.setColor(b);
-		    offscreen.fillRect(0, 0, rw, rh);
-		    offscreen.setColor(f);
-		    offscreen.setFont(new Font("Courier", Font.ITALIC, 42));
-		    offscreen.drawString("Hello World!", 0, 50);
-		    initDone = true;
-		    g.drawImage(buffImage,0,0, this);
-		}
-		catch (Exception e)
-		{
-			System.out.println("oups...");
-		}
-	}
-	*/
 	
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coorOutput) {
 		// TODO Auto-generated method stub
@@ -257,7 +246,7 @@ public class ClickyCanvas extends Canvas {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> coor = new ArrayList<Integer>();
 		double angle, deltaX, deltaY;
-		double offset = 10.0;
+		double offset = 30.0;
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);

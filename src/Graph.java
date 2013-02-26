@@ -36,8 +36,8 @@ public class Graph {
 		graph = new HashMap<Integer, ArrayList<Integer>>();
 
 
-		int temp = fixVertexID(vertices, reinstatedID);
-		fixEdgeID(edges, temp);
+		//int temp = fixVertexID(vertices, reinstatedID);
+		//fixEdgeID(edges, temp);
 
 		for(Vertex v : vertices.values())
 		{
