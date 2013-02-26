@@ -8,7 +8,7 @@ public class Graph {
 
 	HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 	HashMap<Integer, Edge> edges = new HashMap<Integer, Edge>();
-	int reinstatedID = 1; //IDs start at 1000
+	int reinstatedID = 1; //IDs start at 1
 
 
 	public Graph()
@@ -71,9 +71,10 @@ public class Graph {
 		for (Integer i : vertices.keySet()) 
 		{
 			Vertex v = vertices.get(i);
+			System.out.println("i: " + i);
 			v.setID(reinstatedID);
 			vertices2.put(reinstatedID, v);
-			System.out.println(" Vertex Key: " + reinstatedID);
+			System.out.println("Vertex Key: " + reinstatedID);
 			reinstatedID++;
 			
 		}
@@ -97,7 +98,7 @@ public class Graph {
 			Edge e = edges.get(i);
 			e.setID(reinstatedID);
 			edges2.put(reinstatedID, e);
-			System.out.println(" Vertex Key: " + reinstatedID);
+			System.out.println("Edge Key: " + reinstatedID);
 			reinstatedID++;
 			
 		}

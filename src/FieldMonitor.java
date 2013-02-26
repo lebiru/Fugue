@@ -81,8 +81,6 @@ public class FieldMonitor {
 			}
 
 			else if (fieldValue instanceof PrimitiveValue) {
-
-
 				Vertex current = new Vertex(maxValue, "Value: "
 						+ fieldValue.toString() + "  ID: " + maxValue, false);
 				g.addVertex(current);
@@ -93,7 +91,7 @@ public class FieldMonitor {
 
 			// The where we find a null value, we can ignore it
 			else {
-				//System.out.println("Null Value");
+				System.out.println("Null Value");
 			}
 
 		}
