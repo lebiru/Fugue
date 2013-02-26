@@ -7,15 +7,16 @@ import com.sun.jdi.*;
 import com.sun.tools.corba.se.idl.constExpr.Positive;
 
 public class FieldMonitor {
-	static int counter = 10;
+	static int counter = 101;
 
 	public static void monitorSys(int dataport, Graph g) throws IOException,
-			InterruptedException, ClassNotLoadedException {
+			InterruptedException, ClassNotLoadedException 
+	{
 		HashMap<Integer, Integer> haveyouseen = new HashMap<Integer, Integer>();
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
 		vm.suspend();
 		List<ThreadReference> threadref = vm.allThreads();
-
+		int called = 0;
 		try {
 			List<StackFrame> stack;
 			stack = threadref.get(3).frames();
@@ -27,12 +28,11 @@ public class FieldMonitor {
 					if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 						Value information = stack.get(j).getValue(
 								localvariables.get(k));
-						Vertex Main = new Vertex(1, "Main", true);
+												
+						Vertex Main = new Vertex(100, "Main", true);
 						g.addVertex(Main);
 						Search((ObjectReference) information, haveyouseen, g,
 								Main);
-						System.out.println("EXECUTING \n\n\n\n");
-
 					}
 				}
 			}
@@ -59,26 +59,25 @@ public class FieldMonitor {
 				if(haveyouseen.containsKey(key)==false)
 				{
 					haveyouseen.put(key,1);
-					Vertex current = new Vertex(key, name, false);
+					Vertex current = new Vertex(key, "Node", false);
 					g.addVertex(current);
-					makeConnection(g, key, prev, current, fieldValue.toString());
+					makeConnection(g, key, prev, current, name);
 					Search((ObjectReference) fieldValue, haveyouseen, g, current);
-					System.out.println(key);
 				}
 				else 
 				{
-					Vertex current = new Vertex(key,name,false);
-					makeConnection(g, key, prev, current, fieldValue.toString());
-					//System.out.println(key);
+					Vertex current = new Vertex(key,"Node",false);
+					makeConnection(g, key, prev, current, name);
 				}
 			}
 			
 			else if (fieldValue instanceof PrimitiveValue)
 			{
+				System.out.println(fieldValue.toString());
 				Vertex current = new Vertex(counter,fieldValue.toString(),false);
-				makeConnection(g,counter,prev,current, fieldValue.toString());
+				makeConnection(g,counter,prev,current, fields.get(i).name());
 				counter++;
-				System.out.println(counter);
+				//System.out.println(counter);
 			}
 			
 			else 
