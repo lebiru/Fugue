@@ -36,15 +36,6 @@ public class Graph {
 		graph = new HashMap<Integer, ArrayList<Integer>>();
 
 
-<<<<<<< HEAD
-		//int temp = fixVertexID(vertices, reinstatedID);
-=======
-
-		//Bilal ID Solution
-		//int temp = fixVertexID(vertices, reinstatedID);
-
->>>>>>> 7dc9c13ea5596ffd8eccd5867bd6c314549d05d9
-		//fixEdgeID(edges, temp);
 
 		for(Vertex v : vertices.values())
 		{
