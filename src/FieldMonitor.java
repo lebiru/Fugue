@@ -78,9 +78,7 @@ public class FieldMonitor {
 				}
 
 				else {
-					// Vertex current = g.getVertex(key);
-					// makeConnection(g, maxValue, prev, current, name);
-					// maxValue++;
+					 System.out.println("Searching for this key: "+key);
 				}
 			}
 
