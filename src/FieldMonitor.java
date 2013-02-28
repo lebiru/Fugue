@@ -118,7 +118,6 @@ public class FieldMonitor {
 			g.addVertex(current);
 			makeConnection(g, counter, prev, current, name);
 			maxValue++;
-			counter++;
 		}
 	}
 
