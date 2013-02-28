@@ -51,9 +51,10 @@ public class Edge {
 	}
 
 
-	public void setid(int id)
+	public Edge setID(int id)
 	{
 		this.id = id;
+		return this;
 	}
 
 	public Vertex getSource()
@@ -74,6 +75,7 @@ public class Edge {
 	public void displayEdge()
 	{
 		System.out.println("Edge: " + this.id + ", Source: " + this.source.value + ", Destination: " + this.destination.value + " Name: " + this.name);
+
 	}
 
 	public void resetEdge()

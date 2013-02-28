@@ -1,3 +1,9 @@
+/*
+This entire class I got from this website
+http://illegalargumentexception.blogspot.com/2009/03/java-using-jpda-to-write-debugger.html
+This is what helped me to connect to the java program
+ */
+
 import java.io.IOException;
 import java.util.Map;
 

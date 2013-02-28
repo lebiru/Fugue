@@ -18,6 +18,12 @@ public class Vertex {
 		this.id = id;
 	}
 
+	public Vertex setID(int id)
+	{
+		this.id = id;
+		return this;
+	}
+	
 	public Vertex(int id, String value)
 	{
 		this.id = id;

@@ -15,7 +15,8 @@ public class InterestingQueue {
                 head = tail = new InterestingQueue(5);
                 
                 // enqueue the numbers 0 through 20
-                for (int i = 0; i < 20; i++) {
+               // for (int i = 0; i < 20; i++) {
+               for (int i = 0; i < 5; i++) {
                         tail.next = new InterestingQueue((i * 7) % 20);
                         tail = tail.next;
                 }
