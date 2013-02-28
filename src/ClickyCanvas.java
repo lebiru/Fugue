@@ -191,8 +191,8 @@ public class ClickyCanvas extends Canvas {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> triCoor = new ArrayList<Integer>();
 		ArrayList<Integer> coor = new ArrayList<Integer>();
-		coor.add(coorOutput.get(0));
-		coor.add(coorOutput.get(3));
+		coor.add(coorOutput.get(1));
+		coor.add(coorOutput.get(4));
 		coor.add(coorOutput.get(2));
 		coor.add(coorOutput.get(5));
 		double angle = 0, deltaX, deltaY, sideLength = 10.0;
@@ -269,7 +269,7 @@ public class ClickyCanvas extends Canvas {
 				coor.set(5, toY + 20);
 			}
 		}
-		else if(fromY == toY)
+		else
 		{
 			coor.set(3, fromY + 10);
 			coor.set(5, toY + 10);

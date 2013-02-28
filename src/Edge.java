@@ -74,7 +74,7 @@ public class Edge {
 
 	public void displayEdge()
 	{
-		System.out.println("Edge: " + this.id + ", Source: " + this.source.id + ", Destination: " + this.destination.id + " Name: " + this.name);
+		//System.out.println("Edge: " + this.id + ", Source: " + this.source.id + ", Destination: " + this.destination.id + " Name: " + this.name);
 	}
 
 	public void resetEdge()
