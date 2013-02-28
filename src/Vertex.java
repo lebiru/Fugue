@@ -58,7 +58,7 @@ public class Vertex {
 
 	public void displayVertex()
 	{
-	//	System.out.println("Vertex: " + this.id + " Name: " + this.value);
+		System.out.println("Vertex: " + this.id + " Name: " + this.value);
 	}
 
 	public void resetVertex()
