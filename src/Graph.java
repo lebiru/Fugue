@@ -42,7 +42,7 @@ public class Graph {
 
 		for(Edge e : edges.values())
 		{
-			//System.out.println(graph.get(e.getSource().id) + " " + e.getSource().value);
+			System.out.println(graph.get(e.getSource().id) + " " + e.getSource().value);
 			ArrayList<Integer> newEdges = graph.get(e.getSource().id);
 			e.displayEdge();
 			newEdges.add(e.id);
@@ -73,22 +73,22 @@ public class Graph {
 			vertices2.put(reinstatedID, v);
 			System.out.println("Vertex Key: " + reinstatedID);
 			reinstatedID++;
-			
+
 		}
-		
+
 		this.vertices = vertices2;
-		
+
 		return reinstatedID;
-		
+
 	}
 
-	
+
 	/*
 	 *Sequentially gives every edge a concurrent ID, beginning from the last ID of the last Vertex 
 	 */
 	private void fixEdgeID(HashMap<Integer, Edge> edges, int reinstatedID) 
 	{
-		
+
 		HashMap<Integer, Edge> edges2 = new HashMap<Integer, Edge>();
 		for (Integer i : edges.keySet()) 
 		{
@@ -97,13 +97,13 @@ public class Graph {
 			edges2.put(reinstatedID, e);
 			System.out.println("Edge Key: " + reinstatedID);
 			reinstatedID++;
-			
+
 		}
-		
+
 		this.edges = edges2;
-		
+
 	}
-	
+
 
 
 
@@ -184,7 +184,7 @@ public class Graph {
 			ArrayList<Integer> value = g.getValue();
 			System.out.println("Vertex ID: " + key + " || " + vertices.get(key).value + " ||  Edges for Vertex: [" + value.toString() + "]");
 		}
-		
+
 		for (Integer i : edges.keySet()) 
 		{
 			edges.get(i).displayEdge();

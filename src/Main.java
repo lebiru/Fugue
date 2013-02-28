@@ -21,7 +21,7 @@ public class Main {
 		//if(os.contains("Windows")) //if Windows is the Operating System
 
 		//WINDOWS
-	/*	if(os.contains("Windows"))
+		if(os.contains("Windows"))
 
 		{
 			Runtime.getRuntime().exec(
@@ -36,8 +36,8 @@ public class Main {
 		else 
 		{
 			Runtime.getRuntime().exec("javac -g InterestingQueue.java").waitFor();
-			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=9000,server=y,suspend=n InterestingQueue").waitFor();
-		}*/
+			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=9002,server=y,suspend=n InterestingQueue").waitFor();
+		}
 
 
 
@@ -51,9 +51,11 @@ public class Main {
 
 
 		FieldMonitor m = new FieldMonitor();	
-		FieldMonitor.monitorSys(9000,g);
+
+
+		FieldMonitor.monitorSys(9002,g);
 		g.updateGraph(g.vertices, g.edges);
-		System.out.println("\n  DONE \n\n\n\n");
+
 
 		try 
 		{
@@ -68,7 +70,7 @@ public class Main {
 		//Graph test
 		g.displayGraph();
 		g.displayEdges();
-		
+
 		// call function to draw graph
 		ClickyCanvas c = new ClickyCanvas(g);
 
