@@ -13,51 +13,50 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
 public class ClickyCanvas extends Canvas {
-	/**
-	 * 
-	 */
+	// Get the size of the screen to create a full screen window
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	static int width = (int)screenSize.getWidth() - 10;
 	static int height = (int)screenSize.getHeight() - 80;
+
+	// Create a graph to be filled with the current graph later
 	static Graph inputGraph = new Graph();
 
 	public ClickyCanvas(Graph graph) {
-		// TODO Auto-generated constructor stub
+		// Fill the graph with the current graph
 		inputGraph = graph;
 	}
 
+	// Override the paint function to display the graph
 	@Override
 	public void paint(Graphics g)
 	{
 		Graphics2D visual = (Graphics2D)g;
-		ArrayList<Integer> func = new ArrayList<Integer>();
+		// Array for coordinates of the line for the arrow
 		ArrayList<Integer> coordinates = new ArrayList<Integer>();
+		// Array for coordinates of the triangle for the arrow
 		ArrayList<Integer> triCoordinates = new ArrayList<Integer>();
+		// Int arrays for the x and y coordinates of triangle (input to fillPoly function)
 		int[] triX = new int[3], triY = new int[3];
+		// Int arrays for the x and y coordinates of the line (input to polyLine function)
 		int[] edgeX = new int[3], edgeY = new int[3];
-		// keep track of coordinates of each of the objects (hash idX and idY)
+		// Keep track of coordinates of each of the objects (hash idX and idY)
 		HashMap<Integer, Integer> idX = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idY = new HashMap<Integer, Integer>();
-		int numFunctions, from, to, fromX, fromY, toX, toY;
+		int numFunctions = 0, from, to, fromX, fromY, toX, toY;
 		int midX, midY, nameLength;
 		double section;
 		visual.setColor(Color.BLACK);
 
 		inputGraph.getGraph();
 
-		// add function to return the list of vertex IDs
+		// Count how many functions there are in the graph
 		for (int i : inputGraph.vertices.keySet())
 		{
 			if(inputGraph.vertices.get(i).isAFunction)
 			{
-				func.add(1);
-			}
-			else
-			{
-				func.add(0);
+				numFunctions++;
 			}
 		}
-		numFunctions = sum(func);
 		section = (double)width / numFunctions;
 		int x = 0, y = 0, changeX = 0, count = 0, countF = 0;
 
