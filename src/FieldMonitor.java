@@ -83,12 +83,10 @@ public class FieldMonitor {
 
 				else {
 
-					if (g.vertices.get(key) != null) {
 						Vertex temp = g.getVertex(key);
 						makeConnection(g, maxValue, prev, temp, temp.value);
 						maxValue++;
-						//Search((ObjectReference) fieldValue, haveyouseen, g, temp);
-					}
+					//Search((ObjectReference) fieldValue, haveyouseen, g, temp);
 				}
 			}
 
@@ -125,10 +123,11 @@ public class FieldMonitor {
 			String val = ((ObjectReference) fieldValue).getValue(intFields)
 					.toString();
 			System.out.println(maxValue);
-			Vertex current = new Vertex(maxValue, "Value: " + val + " ID: "
-					+ maxValue, false);
+			int ID = (int) ((ObjectReference) fieldValue).uniqueID();
+			Vertex current = new Vertex(ID, "Value: " + val + " ID: "
+					+ ID, false);
 			g.addVertex(current);
-			maxValue++;
+			//maxValue++;
 			makeConnection(g, maxValue, prev, current, name);
 			maxValue++;
 		}
