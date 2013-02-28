@@ -5,11 +5,8 @@ import java.util.Map.Entry;
 public class Graph {
 
 	HashMap<Integer, ArrayList<Integer>> graph = new HashMap<Integer, ArrayList<Integer>>();
-
 	HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 	HashMap<Integer, Edge> edges = new HashMap<Integer, Edge>();
-	int reinstatedID = 1; //IDs start at 1
-
 
 	public Graph()
 	{
@@ -31,7 +28,6 @@ public class Graph {
 	public void updateGraph(HashMap<Integer, Vertex> vertices, HashMap<Integer, Edge> edges)
 	{
 
-		resetID();
 
 		graph = new HashMap<Integer, ArrayList<Integer>>();
 
@@ -52,60 +48,6 @@ public class Graph {
 
 
 	}
-
-	private void resetID() 
-	{
-		this.reinstatedID = 1;
-	}
-
-	/*
-	 * Sequentially gives every Vertex an ID, beginning at 1 (reinstatedID)
-	 */
-	private int fixVertexID(HashMap<Integer, Vertex> vertices, int reinstatedID) 
-	{
-		HashMap<Integer, Vertex> vertices2 = new HashMap<Integer, Vertex>();
-		for (Integer i : vertices.keySet()) 
-		{
-			Vertex v = vertices.get(i);
-			System.out.println("i: " + i);
-			v.setID(reinstatedID);
-			v.setName("ID: " + v.id);
-			vertices2.put(reinstatedID, v);
-			System.out.println("Vertex Key: " + reinstatedID);
-			reinstatedID++;
-
-		}
-
-		this.vertices = vertices2;
-
-		return reinstatedID;
-
-	}
-
-
-	/*
-	 *Sequentially gives every edge a concurrent ID, beginning from the last ID of the last Vertex 
-	 */
-	private void fixEdgeID(HashMap<Integer, Edge> edges, int reinstatedID) 
-	{
-
-		HashMap<Integer, Edge> edges2 = new HashMap<Integer, Edge>();
-		for (Integer i : edges.keySet()) 
-		{
-			Edge e = edges.get(i);
-			e.setID(reinstatedID);
-			edges2.put(reinstatedID, e);
-			System.out.println("Edge Key: " + reinstatedID);
-			reinstatedID++;
-
-		}
-
-		this.edges = edges2;
-
-	}
-
-
-
 
 	/*
 	 * Returns the graph.
@@ -156,17 +98,26 @@ public class Graph {
 	{
 		return edges.get(id);
 	}
-
+	
+	/*
+	 * Returns vertex value
+	 */
 	public String getVertexValue(int id)
 	{
 		return vertices.get(id).value;
 	}
 
+	/*
+	 * Returns edge name
+	 */
 	public String getEdgeName(int id)
 	{
 		return edges.get(id).name;
 	}
 
+	/*
+	 * Returns the number of vertices in our graph
+	 */
 	public int getVerticesSize()
 	{
 		return vertices.size();

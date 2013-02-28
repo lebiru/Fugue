@@ -39,23 +39,15 @@ public class Main {
 			Runtime.getRuntime().exec("java -Xdebug -Xrunjdwp:transport=dt_socket,address=9002,server=y,suspend=n InterestingQueue").waitFor();
 		}
 
-
-
-
 		try {
 		    Thread.sleep(100);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
 
-
-
 		FieldMonitor m = new FieldMonitor();	
-
-
 		FieldMonitor.monitorSys(9002,g);
 		g.updateGraph(g.vertices, g.edges);
-
 
 		try 
 		{
@@ -65,7 +57,6 @@ public class Main {
 		{
 			Thread.currentThread().interrupt();
 		}
-		
 
 		//Graph test
 		g.displayGraph();

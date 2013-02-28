@@ -13,6 +13,7 @@ public class Vertex {
 
 	}
 
+	
 	public Vertex(int id)
 	{
 		this.id = id;
