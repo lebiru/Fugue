@@ -57,18 +57,26 @@ public class ClickyCanvas extends Canvas {
 				numFunctions++;
 			}
 		}
+		// Divide the screen up for each function
 		section = (double)width / numFunctions;
 		int x = 0, y = 0, changeX = 0, count = 0, countF = 0;
 
-
+		// Display the vertices
 		for(int i : inputGraph.vertices.keySet())
 		{
+			// If off the screen, start the next column
 			if(y > (height - 250))
 			{
 				y = 50;
 				x = x + 300;
 			}
-			// draw the vertex
+			// If too far to the right, start back at the beginning
+			if(x > (width - 200))
+			{
+				y = 100;
+				x = 30;
+			}
+			// Draw the vertex
 			if(inputGraph.vertices.get(i).isAFunction) //function
 			{
 				// find starting x (10 from left)
@@ -92,11 +100,7 @@ public class ClickyCanvas extends Canvas {
 					x = 30;
 					count++;
 				}
-				/*else if(countF == 0)
-				{
-					count++;
-				}*/
-				if(changeX == 1)
+				if(changeX == 1) // If it is the first object
 				{
 					x = x + 250;
 					changeX = 0;
@@ -106,6 +110,7 @@ public class ClickyCanvas extends Canvas {
 				{
 					// move each object down from the last one
 					y = y + 100;
+					// offset the next object so its not in a straight line
 					if(count%2 == 0)
 					{
 						x = x + 20;
@@ -116,7 +121,7 @@ public class ClickyCanvas extends Canvas {
 					}
 					count++;
 				}
-				// draw rectangle for functions
+				// draw rounded rectangle for objects
 				visual.drawRoundRect(x, y, 150, 20, 20, 20);
 			}
 			// record coordinates
@@ -125,14 +130,12 @@ public class ClickyCanvas extends Canvas {
 
 			// display value
 			visual.drawString(inputGraph.vertices.get(i).value, x+5, y+15);
-			// modify this function to only return the edges for a specific vertex 
-
 		}
 		
+		// Set the color to red to display the edges
 		visual.setColor(Color.RED);
 		for(int i : inputGraph.edges.keySet())
 		{
-			System.out.println(i);
 			// draw the arrow for the edge
 			from = inputGraph.edges.get(i).source.id;
 			fromX = idX.get(from);
@@ -141,6 +144,7 @@ public class ClickyCanvas extends Canvas {
 			toX = idX.get(to);
 			toY = idY.get(to);
 
+			// As long as it is not looped to itself
 			if(to != from)
 			{
 				// find coordinates to draw line
@@ -167,7 +171,7 @@ public class ClickyCanvas extends Canvas {
 				nameLength = inputGraph.edges.get(i).name.length();
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
-			else
+			else // If it is looped to itself
 			{
 				visual.drawArc(fromX+50, fromY+10, 50, 20, 180, 180);
 				triX[0] = fromX + 100;
@@ -187,9 +191,10 @@ public class ClickyCanvas extends Canvas {
 	}
 	
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coorOutput) {
-		// TODO Auto-generated method stub
+		// Function to calculate the 3 points to create the triangle for the arrow
 		ArrayList<Integer> triCoor = new ArrayList<Integer>();
 		ArrayList<Integer> coor = new ArrayList<Integer>();
+		// Get the second part of the line to calculate the angle to make the triangle
 		coor.add(coorOutput.get(1));
 		coor.add(coorOutput.get(4));
 		coor.add(coorOutput.get(2));
@@ -217,6 +222,7 @@ public class ClickyCanvas extends Canvas {
 		}
 		else
 		{
+			// Calculate the angle
 			deltaX = (double)(coor.get(2) - coor.get(0));
 			deltaY = (double)(coor.get(3) - coor.get(1));
 			angle = Math.atan(deltaY/deltaX);
@@ -228,6 +234,7 @@ public class ClickyCanvas extends Canvas {
 		}
 
 		// use the point and angle to create triangle
+		// use math to find the other 2 points of the triangle
 		remAngle = angle + 30.0;
 		tempX = triCoor.get(0) - sideLength * Math.cos(Math.toRadians(remAngle));
 		tempY = triCoor.get(3) - sideLength * Math.sin(Math.toRadians(remAngle));
@@ -242,7 +249,7 @@ public class ClickyCanvas extends Canvas {
 	}
 
 	private ArrayList<Integer> findConnectingPoints(int fromX, int fromY, int toX, int toY) {
-		// TODO Auto-generated method stub
+		// Function to calculate the 3 points of the angled line for the arrow
 		ArrayList<Integer> coor = new ArrayList<Integer>();
 		double angle, deltaX, deltaY;
 		double offset = 30.0;
@@ -253,6 +260,7 @@ public class ClickyCanvas extends Canvas {
 		coor.add(0);
 		coor.add(0);
 
+		// If they are in the same column, connect the center x-wise
 		if(Math.abs(fromX - toX) < 50)
 		{
 			coor.set(0, fromX + 75);
@@ -268,7 +276,7 @@ public class ClickyCanvas extends Canvas {
 				coor.set(5, toY + 20);
 			}
 		}
-		else
+		else // connect the center y-wise
 		{
 			coor.set(3, fromY + 10);
 			coor.set(5, toY + 10);
@@ -284,6 +292,7 @@ public class ClickyCanvas extends Canvas {
 			}
 		}
 		
+		// calculate the angle
 		deltaX = (double)(coor.get(2) - coor.get(0));
 		deltaY = (double)(coor.get(5) - coor.get(3));
 		angle = Math.atan(deltaY/deltaX);
@@ -292,6 +301,7 @@ public class ClickyCanvas extends Canvas {
 		{
 			angle = angle + 180;
 		}
+		// calculate the offset center point
 		int tempX = (coor.get(0) + coor.get(2)) / 2;
 		int tempY = (coor.get(3) + coor.get(5)) / 2;
 		tempX = (int) (tempX - offset*Math.cos(180 - (angle + 90)));
@@ -301,15 +311,5 @@ public class ClickyCanvas extends Canvas {
 		
 		return coor;
 	}
-
-	private static int sum(ArrayList<Integer> func) {
-		int total = 0;
-		for(int i : func)
-		{
-			total = total + i;
-		}
-		return total;
-	}
-
 
 }
