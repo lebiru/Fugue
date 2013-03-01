@@ -23,32 +23,20 @@ public class FieldMonitor {
 			// run dfs to find the highest ID value
 			maxIDsearch(vm);
 			maxValue++;
-			List<StackFrame> stack = threadref.get(3).frames();
+			List<StackFrame> stackframe = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
 
-			// Create the first vertex
 			Vertex Begin = new Vertex(counter, "MAIN", true);
 			g.addVertex(Begin);
 			counter--;
 
-			// go through each frame
 			for (int i = 1; i < framecount; i++) {
-				Vertex frame;
-				// Obtain variables in the stack
-				List<LocalVariable> localvariables = stack.get(i).visibleVariables();
-				for (int j = 0; j < localvariables.size(); j++) {
-					// Runs to find objectreferences in the stack
+				//Vertex frame = null;
+				List<LocalVariable> locals = stackframe.get(i).visibleVariables();
+				for (int j = 0; j < locals.size(); j++) {			
+					Value reference = stackframe.get(i).getValue(locals.get(j));	
 					
-					
-					
-					
-					
-					
-					if (stack.get(i).getValue(localvariables.get(j)) instanceof ObjectReference) {
-						// If the vertex for the represented frame was not
-						// created, then create one
-						// and make a connection to it for the previous one
-						if (haveyouseen.contains(i * (-1)) == false) {
+					if (haveyouseen.contains(i * (-1)) == false) {
 							frame = new Vertex(i * -1, "Frame " + i, false);
 							g.addVertex(frame);
 							haveyouseen.add(i * -1);
@@ -57,19 +45,20 @@ public class FieldMonitor {
 						} else {
 							frame = g.vertices.get(i * -1);
 						}
+					
 						
-						
-						// Get information on the local variables
-						Value information = stack.get(i).getValue(localvariables.get(j));
-						// Run a DFS
-						Search((ObjectReference) information, haveyouseen, g, frame, information);
-						// Set the current frame to a previous frame
-						// for connection reference at the next iteration
-						Begin = frame;
-					}
+					
+					
+					if(reference instanceof ObjectReference) {
+							Search((ObjectReference) reference, haveyouseen, g, frame);
+						}		
 
+						//Search((ObjectReference) information, haveyouseen, g, frame, information);
+						
 				}
+				Begin = frame;
 			}
+			
 
 		} catch (IncompatibleThreadStateException e) {
 			e.printStackTrace();
@@ -78,11 +67,10 @@ public class FieldMonitor {
 		}
 	}
 
-	private static void Search(ObjectReference object, ArrayList<Integer> haveyouseen, Graph g, Vertex prev, Value information) throws InterruptedException,
+	private static void Search(ObjectReference object, ArrayList<Integer> haveyouseen, Graph g, Vertex prev) throws InterruptedException,
 			ClassNotLoadedException {
 		// Gets all the reference field in the object reference
 		List<Field> fields = object.referenceType().allFields();
-
 		for (int i = 0; i < fields.size(); i++) {
 			Value fieldValue = object.getValue(fields.get(i));
 			// If it's an object reference we will do a DFS on the next
@@ -105,7 +93,7 @@ public class FieldMonitor {
 						makeConnection(g, maxValue, prev, current, name);
 						maxValue++;
 						// Run DFS again
-						Search((ObjectReference) fieldValue, haveyouseen, g, current,information);
+						Search((ObjectReference) fieldValue, haveyouseen, g, current);
 					}
 				}
 
