@@ -38,6 +38,12 @@ public class FieldMonitor {
 				List<LocalVariable> localvariables = stack.get(i).visibleVariables();
 				for (int j = 0; j < localvariables.size(); j++) {
 					// Runs to find objectreferences in the stack
+					
+					
+					
+					
+					
+					
 					if (stack.get(i).getValue(localvariables.get(j)) instanceof ObjectReference) {
 						// If the vertex for the represented frame was not
 						// created, then create one
@@ -51,10 +57,12 @@ public class FieldMonitor {
 						} else {
 							frame = g.vertices.get(i * -1);
 						}
+						
+						
 						// Get information on the local variables
 						Value information = stack.get(i).getValue(localvariables.get(j));
 						// Run a DFS
-						Search((ObjectReference) information, haveyouseen, g, frame);
+						Search((ObjectReference) information, haveyouseen, g, frame, information);
 						// Set the current frame to a previous frame
 						// for connection reference at the next iteration
 						Begin = frame;
@@ -70,7 +78,7 @@ public class FieldMonitor {
 		}
 	}
 
-	private static void Search(ObjectReference object, ArrayList<Integer> haveyouseen, Graph g, Vertex prev) throws InterruptedException,
+	private static void Search(ObjectReference object, ArrayList<Integer> haveyouseen, Graph g, Vertex prev, Value information) throws InterruptedException,
 			ClassNotLoadedException {
 		// Gets all the reference field in the object reference
 		List<Field> fields = object.referenceType().allFields();
@@ -97,7 +105,7 @@ public class FieldMonitor {
 						makeConnection(g, maxValue, prev, current, name);
 						maxValue++;
 						// Run DFS again
-						Search((ObjectReference) fieldValue, haveyouseen, g, current);
+						Search((ObjectReference) fieldValue, haveyouseen, g, current,information);
 					}
 				}
 
@@ -107,6 +115,7 @@ public class FieldMonitor {
 					Vertex temp = g.getVertex(key);
 					makeConnection(g, maxValue, prev, temp, temp.value);
 					maxValue++;
+					
 				}
 			}
 
