@@ -20,7 +20,6 @@ public class FieldMonitor {
 			maxValue++;
 			List<StackFrame> stack = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
-
 			Vertex Begin = new Vertex(counter, "MAIN", true);
 			g.addVertex(Begin);
 			counter--;
@@ -33,10 +32,14 @@ public class FieldMonitor {
 					LocalVariable infoData = locals.get(j);
 					String name = infoData.name();
 					Value information = stack.get(i).getValue(locals.get(j));
-					if (information instanceof ObjectReference) {
-
+					if(information instanceof ArrayReference || information instanceof StringReference ){
+						Vertex current =otherReferences(g,information,infoData);
+						g.addVertex(current);
+						makeConnection(g,maxValue,frame,current,infoData.name());
+						maxValue++;
+					}
+					else if (information instanceof ObjectReference) {
 						int key = (int) ((ObjectReference) information).uniqueID();
-
 						if (haveyouseen.contains(key) == false) {
 							if (information.toString().contains("java.lang.Integer")) {
 								caseInteger(g, information, frame, name);
@@ -53,7 +56,6 @@ public class FieldMonitor {
 							makeConnection(g, maxValue, frame, temp, temp.value);
 							maxValue++;
 						}
-
 					} else {
 						Vertex current = new Vertex(maxValue, "NULL", false);
 						maxValue++;
@@ -61,12 +63,10 @@ public class FieldMonitor {
 						makeConnection(g, maxValue, frame, current, infoData.name().toString());
 						maxValue++;
 						System.out.println("ACTIVATED : " + locals.get(j).type() + "  " + infoData.name() + "  ");
-
 					}
 					Begin = frame;
 
 				}
-
 			}
 
 		} catch (IncompatibleThreadStateException e) {
@@ -75,10 +75,31 @@ public class FieldMonitor {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	private static Vertex otherReferences(Graph g, Value information, LocalVariable infoData) throws ClassNotLoadedException{
+		Vertex result;
+		
+		if(information instanceof ArrayReference) {
+				Vertex current = new Vertex(maxValue, infoData.type().toString(),false);
+				g.addVertex(current);
+				maxValue++;
+				System.out.println(infoData.type());
+				
+			result = current;
+		}
+		else {
+			Vertex current = new Vertex(maxValue, infoData.typeName().toString(), false);
+			g.addVertex(current);
+			maxValue++;
+			result = current;
+		}
+		return result;
+	}
+
 
 	private static Vertex frameHandle(Graph g, ArrayList<Integer> haveyouseen, int i, Vertex Begin) {
 		Vertex vertex;
-
 		if (haveyouseen.contains(i * (-1)) == false) {
 			vertex = new Vertex(i * -1, "Frame " + i, false);
 			g.addVertex(vertex);
@@ -124,7 +145,6 @@ public class FieldMonitor {
 			// Once we it a primative value, we create a vertex and connect it
 			// to the previous vertex
 			else if (fieldValue instanceof PrimitiveValue) {
-				System.out.println(maxValue);
 				Vertex current = new Vertex(maxValue, "Value: " + fieldValue.toString(), false);
 				g.addVertex(current);
 				maxValue++;
@@ -156,7 +176,7 @@ public class FieldMonitor {
 		maxValue++;
 	}
 
-	//Creates a an edge
+	// Creates a an edge
 	private static void makeConnection(Graph g, int key, Vertex prev, Vertex current, String string) {
 		g.addEdge(new Edge(key, prev, current, string));
 	}
