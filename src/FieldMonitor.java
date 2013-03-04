@@ -11,19 +11,14 @@ public class FieldMonitor {
 	static int counter = 0;
 
 	public static void monitorSys(int dataport, Graph g) throws IOException, InterruptedException, ClassNotLoadedException {
-		// Setup Cach for DFS
 		ArrayList<Integer> haveyouseen = new ArrayList<Integer>();
-		// Connect to the virtual machine
 		VirtualMachine vm = new VMAcquirer().connect(dataport);
-		// Pause the VM
 		vm.suspend();
 		try {
-			// Get a list of all the threads that ran
 			List<ThreadReference> threadref = vm.allThreads();
-			// run dfs to find the highest ID value
 			maxIDsearch(vm);
 			maxValue++;
-			List<StackFrame> stackframe = threadref.get(3).frames();
+			List<StackFrame> stack = threadref.get(3).frames();
 			int framecount = threadref.get(3).frameCount();
 
 			Vertex Begin = new Vertex(counter, "MAIN", true);
@@ -31,34 +26,48 @@ public class FieldMonitor {
 			counter--;
 
 			for (int i = 1; i < framecount; i++) {
-				//Vertex frame = null;
-				List<LocalVariable> locals = stackframe.get(i).visibleVariables();
-				for (int j = 0; j < locals.size(); j++) {			
-					Value reference = stackframe.get(i).getValue(locals.get(j));	
-					
-					if (haveyouseen.contains(i * (-1)) == false) {
-							frame = new Vertex(i * -1, "Frame " + i, false);
-							g.addVertex(frame);
-							haveyouseen.add(i * -1);
-							makeConnection(g, counter--, Begin, frame, "Frame ");
-							counter--;
-						} else {
-							frame = g.vertices.get(i * -1);
-						}
-					
-						
-					
-					
-					if(reference instanceof ObjectReference) {
-							Search((ObjectReference) reference, haveyouseen, g, frame);
-						}		
+				List<LocalVariable> locals = stack.get(i).visibleVariables();
+				for (int j = 0; j < locals.size(); j++) {
 
-						//Search((ObjectReference) information, haveyouseen, g, frame, information);
-						
+					Vertex frame = frameHandle(g, haveyouseen, i, Begin);
+					LocalVariable infoData = locals.get(j);
+					String name = infoData.name();
+					Value information = stack.get(i).getValue(locals.get(j));
+					if (information instanceof ObjectReference) {
+
+						int key = (int) ((ObjectReference) information).uniqueID();
+
+						if (haveyouseen.contains(key) == false) {
+							if (information.toString().contains("java.lang.Integer")) {
+								caseInteger(g, information, frame, name);
+							} else {
+								Vertex current = new Vertex(key, infoData.typeName().toString(), false);
+								haveyouseen.add(key);
+								g.addVertex(current);
+								makeConnection(g, maxValue, frame, current, infoData.name());
+								maxValue++;
+								Search((ObjectReference) information, haveyouseen, g, current);
+							}
+						} else {
+							Vertex temp = g.getVertex(key);
+							makeConnection(g, maxValue, frame, temp, temp.value);
+							maxValue++;
+						}
+
+					} else {
+						Vertex current = new Vertex(maxValue, "NULL", false);
+						maxValue++;
+						g.addVertex(current);
+						makeConnection(g, maxValue, frame, current, infoData.name().toString());
+						maxValue++;
+						System.out.println("ACTIVATED : " + locals.get(j).type() + "  " + infoData.name() + "  ");
+
+					}
+					Begin = frame;
+
 				}
-				Begin = frame;
+
 			}
-			
 
 		} catch (IncompatibleThreadStateException e) {
 			e.printStackTrace();
@@ -67,51 +76,56 @@ public class FieldMonitor {
 		}
 	}
 
+	private static Vertex frameHandle(Graph g, ArrayList<Integer> haveyouseen, int i, Vertex Begin) {
+		Vertex vertex;
+
+		if (haveyouseen.contains(i * (-1)) == false) {
+			vertex = new Vertex(i * -1, "Frame " + i, false);
+			g.addVertex(vertex);
+			haveyouseen.add(i * -1);
+			makeConnection(g, counter--, Begin, vertex, "Frame ");
+			counter--;
+		} else {
+			vertex = g.vertices.get(i * -1);
+		}
+		return vertex;
+	}
+
 	private static void Search(ObjectReference object, ArrayList<Integer> haveyouseen, Graph g, Vertex prev) throws InterruptedException,
 			ClassNotLoadedException {
-		// Gets all the reference field in the object reference
 		List<Field> fields = object.referenceType().allFields();
+
 		for (int i = 0; i < fields.size(); i++) {
 			Value fieldValue = object.getValue(fields.get(i));
-			// If it's an object reference we will do a DFS on the next
-			// iteration
 			if (fieldValue instanceof ObjectReference) {
 				String name = fields.get(i).name();
 				int key = (int) ((ObjectReference) fieldValue).uniqueID();
-				// Runs if we haven't visted the current vertex
 				if (haveyouseen.contains(key) == false) {
 					haveyouseen.add(key);
 					if (fieldValue.toString().contains("java.lang.Integer")) {
-						// This is a special case of searching when dealing with
-						// the Integer class
 						caseInteger(g, fieldValue, prev, name);
 					} else {
-						// Creates a vertex
-						Vertex current = new Vertex(key, fields.get(i).typeName() + " ID: " + key, false);
+						Vertex current = new Vertex(key, fields.get(i).typeName(), false);
 						g.addVertex(current);
-						// Makes a connection to prev and current
 						makeConnection(g, maxValue, prev, current, name);
 						maxValue++;
-						// Run DFS again
 						Search((ObjectReference) fieldValue, haveyouseen, g, current);
 					}
 				}
 
-				// If we have seen the ObjectReference, then we just make a
-				// connection to it
 				else {
 					Vertex temp = g.getVertex(key);
-					makeConnection(g, maxValue, prev, temp, temp.value);
+					makeConnection(g, maxValue, prev, temp, name);
 					maxValue++;
-					
 				}
+
 			}
 
 			// Once we it a primative value, we create a vertex and connect it
 			// to the previous vertex
 			else if (fieldValue instanceof PrimitiveValue) {
 				System.out.println(maxValue);
-				Vertex current = new Vertex(maxValue, "Value: " + fieldValue.toString() + "  ID: " + maxValue, false);
+				Vertex current = new Vertex(maxValue, "Value: " + fieldValue.toString(), false);
 				g.addVertex(current);
 				maxValue++;
 				makeConnection(g, maxValue, prev, current, fields.get(i).name());
@@ -126,53 +140,48 @@ public class FieldMonitor {
 				g.addVertex(pointNull);
 				makeConnection(g, maxValue, prev, pointNull, fields.get(i).name());
 				maxValue++;
-
 			}
-
 		}
 	}
 
-	// This is a special case for the Integer Class 
+	// This is a special case for the Integer Class
 	private static void caseInteger(Graph g, Value fieldValue, Vertex prev, String name) {
 		Field intFields = ((ObjectReference) fieldValue).referenceType().fieldByName("value");
 		String val = ((ObjectReference) fieldValue).getValue(intFields).toString();
-		//Used the ID from the Integer class as the reference ID for the vertex
+		// Used the ID from the Integer class as the reference ID for the vertex
 		int ID = (int) ((ObjectReference) fieldValue).uniqueID();
-		Vertex current = new Vertex(ID, "Value: " + val + " ID: " + ID, false);
+		Vertex current = new Vertex(ID, "Value: " + val, false);
 		g.addVertex(current);
 		makeConnection(g, maxValue, prev, current, name);
 		maxValue++;
 	}
 
-	//A useless function to add a connection.
-	//But, it made me feel safe doing it this way.
-	//As too why not all the other stuff...no much of an explanation
+	//Creates a an edge
 	private static void makeConnection(Graph g, int key, Vertex prev, Vertex current, String string) {
 		g.addEdge(new Edge(key, prev, current, string));
 	}
-	
-	//This is a DFS, but just to find the max value of the ID
-	private static void idValueSearch(ObjectReference or, HashMap<Integer, Integer> haveyouseen) throws InterruptedException, ClassNotLoadedException {
+
+	// This is a DFS, but just to find the max value of the ID
+	private static void idValueSearch(ObjectReference or, ArrayList<Integer> haveyouseen) throws InterruptedException, ClassNotLoadedException {
 		List<Field> fields = or.referenceType().allFields();
 		for (int i = 0; i < fields.size(); i++) {
 			Value fieldValue = or.getValue(fields.get(i));
 
 			if (fieldValue instanceof ObjectReference) {
 				int key = (int) ((ObjectReference) fieldValue).uniqueID();
-				if (haveyouseen.containsKey(key) == false) {
-					haveyouseen.put(key, 1);
+				if (haveyouseen.contains(key) == false) {
+					haveyouseen.add(key);
 					maxValue = Math.max(maxValue, key);
 					idValueSearch((ObjectReference) fieldValue, haveyouseen);
-					System.out.println(fieldValue);
 				}
 			}
 		}
 	}
-	
-	//Go through every stack frame to find the largest ID value
+
+	// Go through every stack frame to find the largest ID value
 	private static void maxIDsearch(VirtualMachine vm) throws IncompatibleThreadStateException, AbsentInformationException, InterruptedException,
 			ClassNotLoadedException {
-		HashMap<Integer, Integer> hashId = new HashMap<Integer, Integer>();
+		ArrayList<Integer> ID = new ArrayList<Integer>();
 		List<ThreadReference> threadref = vm.allThreads();
 		List<StackFrame> stack;
 		stack = threadref.get(3).frames();
@@ -182,7 +191,7 @@ public class FieldMonitor {
 			for (int k = 0; k < localvariables.size(); k++) {
 				if (stack.get(j).getValue(localvariables.get(k)) instanceof ObjectReference) {
 					Value information = stack.get(j).getValue(localvariables.get(k));
-					idValueSearch((ObjectReference) information, hashId);
+					idValueSearch((ObjectReference) information, ID);
 				}
 			}
 		}
