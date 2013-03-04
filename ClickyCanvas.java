@@ -13,70 +13,61 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
 public class ClickyCanvas extends Canvas {
-	// Get the size of the screen to create a full screen window
+
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	static int width = (int)screenSize.getWidth() - 10;
 	static int height = (int)screenSize.getHeight() - 80;
-
-	// Create a graph to be filled with the current graph later
 	static Graph inputGraph = new Graph();
 
 	public ClickyCanvas(Graph graph) {
-		// Fill the graph with the current graph
+		// TODO Auto-generated constructor stub
 		inputGraph = graph;
 	}
 
-	// Override the paint function to display the graph
 	@Override
 	public void paint(Graphics g)
 	{
 		Graphics2D visual = (Graphics2D)g;
-		// Array for coordinates of the line for the arrow
+		ArrayList<Integer> func = new ArrayList<Integer>();
 		ArrayList<Integer> coordinates = new ArrayList<Integer>();
-		// Array for coordinates of the triangle for the arrow
 		ArrayList<Integer> triCoordinates = new ArrayList<Integer>();
-		// Int arrays for the x and y coordinates of triangle (input to fillPoly function)
 		int[] triX = new int[3], triY = new int[3];
-		// Int arrays for the x and y coordinates of the line (input to polyLine function)
 		int[] edgeX = new int[3], edgeY = new int[3];
-		// Keep track of coordinates of each of the objects (hash idX and idY)
+		// keep track of coordinates of each of the objects (hash idX and idY)
 		HashMap<Integer, Integer> idX = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idY = new HashMap<Integer, Integer>();
-		int numFunctions = 0, from, to, fromX, fromY, toX, toY;
+		int numFunctions, from, to, fromX, fromY, toX, toY;
 		int midX, midY, nameLength;
 		double section;
 		visual.setColor(Color.BLACK);
 
 		inputGraph.getGraph();
 
-		// Count how many functions there are in the graph
+		// add function to return the list of vertex IDs
 		for (int i : inputGraph.vertices.keySet())
 		{
 			if(inputGraph.vertices.get(i).isAFunction)
 			{
-				numFunctions++;
+				func.add(1);
+			}
+			else
+			{
+				func.add(0);
 			}
 		}
-		// Divide the screen up for each function
+		numFunctions = sum(func);
 		section = (double)width / numFunctions;
-		int x = 0, y = 0, changeX = 0, count = 0, countF = 0;
+		int x = 0, y = 0, changeX = 1, count = 0;
 
-		// Display the vertices
+
 		for(int i : inputGraph.vertices.keySet())
 		{
-			// If off the screen, start the next column
-			if(y > (height - 250))
+			if(y > height)
 			{
 				y = 50;
-				x = x + 300;
+				x = x + 250;
 			}
-			// If too far to the right, start back at the beginning
-			if(x > (width - 200))
-			{
-				y = 100;
-				x = 30;
-			}
-			// Draw the vertex
+			// draw the vertex
 			if(inputGraph.vertices.get(i).isAFunction) //function
 			{
 				// find starting x (10 from left)
@@ -84,25 +75,18 @@ public class ClickyCanvas extends Canvas {
 				// always start functions 50 from top
 				y = 50;
 				changeX = 1;
-				countF = countF + 1; //function count
 				count = 0;
 
 				// draw rectangle for functions
-				visual.drawRect(x, y, 150, 20);
+				visual.drawRect(x, y, 100, 20);
 			}
 			else //object
 			{
 				// first object of the function moves over,
 				//   the rest will be aligned under it
-				if(countF == 0 && count == 0)
+				if(changeX == 1)
 				{
-					y = 50;
-					x = 30;
-					count++;
-				}
-				if(changeX == 1) // If it is the first object
-				{
-					x = x + 250;
+					x = x + 200;
 					changeX = 0;
 					count = 1;
 				}
@@ -110,7 +94,6 @@ public class ClickyCanvas extends Canvas {
 				{
 					// move each object down from the last one
 					y = y + 100;
-					// offset the next object so its not in a straight line
 					if(count%2 == 0)
 					{
 						x = x + 20;
@@ -119,10 +102,10 @@ public class ClickyCanvas extends Canvas {
 					{
 						x = x - 20;
 					}
-					count++;
+					count = count + 1;
 				}
 				// draw rounded rectangle for objects
-				visual.drawRoundRect(x, y, 150, 20, 20, 20);
+				visual.drawRoundRect(x, y, 100, 20, 20, 20);
 			}
 			// record coordinates
 			idX.put(i, x);
@@ -130,9 +113,10 @@ public class ClickyCanvas extends Canvas {
 
 			// display value
 			visual.drawString(inputGraph.vertices.get(i).value, x+5, y+15);
+			// modify this function to only return the edges for a specific vertex 
+
 		}
 
-		// Set the color to red to display the edges
 		visual.setColor(Color.RED);
 		for(int i : inputGraph.edges.keySet())
 		{
@@ -144,7 +128,6 @@ public class ClickyCanvas extends Canvas {
 			toX = idX.get(to);
 			toY = idY.get(to);
 
-			// As long as it is not looped to itself
 			if(to != from)
 			{
 				// find coordinates to draw line
@@ -171,7 +154,7 @@ public class ClickyCanvas extends Canvas {
 				nameLength = inputGraph.edges.get(i).name.length();
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
-			else // If it is looped to itself
+			else
 			{
 				visual.drawArc(fromX+50, fromY+10, 50, 20, 180, 180);
 				triX[0] = fromX + 100;
@@ -188,15 +171,16 @@ public class ClickyCanvas extends Canvas {
 				visual.drawString(inputGraph.edges.get(i).name, midX - (nameLength*5/2), midY);
 			}
 		}
+		// Add scroll bar if necessary
+		
 	}
-
+	
 	private ArrayList<Integer> findTriCordinates(ArrayList<Integer> coorOutput) {
-		// Function to calculate the 3 points to create the triangle for the arrow
+		// TODO Auto-generated method stub
 		ArrayList<Integer> triCoor = new ArrayList<Integer>();
 		ArrayList<Integer> coor = new ArrayList<Integer>();
-		// Get the second part of the line to calculate the angle to make the triangle
-		coor.add(coorOutput.get(1));
-		coor.add(coorOutput.get(4));
+		coor.add(coorOutput.get(0));
+		coor.add(coorOutput.get(3));
 		coor.add(coorOutput.get(2));
 		coor.add(coorOutput.get(5));
 		double angle = 0, deltaX, deltaY, sideLength = 10.0;
@@ -222,7 +206,6 @@ public class ClickyCanvas extends Canvas {
 		}
 		else
 		{
-			// Calculate the angle
 			deltaX = (double)(coor.get(2) - coor.get(0));
 			deltaY = (double)(coor.get(3) - coor.get(1));
 			angle = Math.atan(deltaY/deltaX);
@@ -234,7 +217,6 @@ public class ClickyCanvas extends Canvas {
 		}
 
 		// use the point and angle to create triangle
-		// use math to find the other 2 points of the triangle
 		remAngle = angle + 30.0;
 		tempX = triCoor.get(0) - sideLength * Math.cos(Math.toRadians(remAngle));
 		tempY = triCoor.get(3) - sideLength * Math.sin(Math.toRadians(remAngle));
@@ -249,10 +231,10 @@ public class ClickyCanvas extends Canvas {
 	}
 
 	private ArrayList<Integer> findConnectingPoints(int fromX, int fromY, int toX, int toY) {
-		// Function to calculate the 3 points of the angled line for the arrow
+		// TODO Auto-generated method stub
 		ArrayList<Integer> coor = new ArrayList<Integer>();
 		double angle, deltaX, deltaY;
-		double offset = 30.0;
+		double offset = 10.0;
 		coor.add(0);
 		coor.add(0);
 		coor.add(0);
@@ -260,7 +242,6 @@ public class ClickyCanvas extends Canvas {
 		coor.add(0);
 		coor.add(0);
 
-		// If they are in the same column, connect the center x-wise
 		if(Math.abs(fromX - toX) < 50)
 		{
 			coor.set(0, fromX + 75);
@@ -276,7 +257,7 @@ public class ClickyCanvas extends Canvas {
 				coor.set(5, toY + 20);
 			}
 		}
-		else // connect the center y-wise
+		else if(fromY == toY)
 		{
 			coor.set(3, fromY + 10);
 			coor.set(5, toY + 10);
@@ -291,8 +272,7 @@ public class ClickyCanvas extends Canvas {
 				coor.set(2, toX + 150);
 			}
 		}
-
-		// calculate the angle
+		
 		deltaX = (double)(coor.get(2) - coor.get(0));
 		deltaY = (double)(coor.get(5) - coor.get(3));
 		angle = Math.atan(deltaY/deltaX);
@@ -301,15 +281,24 @@ public class ClickyCanvas extends Canvas {
 		{
 			angle = angle + 180;
 		}
-		// calculate the offset center point
 		int tempX = (coor.get(0) + coor.get(2)) / 2;
 		int tempY = (coor.get(3) + coor.get(5)) / 2;
 		tempX = (int) (tempX - offset*Math.cos(180 - (angle + 90)));
 		tempY = (int) (tempY + offset*Math.sin(180 - (angle + 90)));
 		coor.set(1, tempX);
 		coor.set(4, tempY);
-
+		
 		return coor;
 	}
+
+	private static int sum(ArrayList<Integer> func) {
+		int total = 0;
+		for(int i : func)
+		{
+			total = total + i;
+		}
+		return total;
+	}
+
 
 }

@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class InterestingQueue {
         InterestingQueue next = null;
-        Integer data;
+        Interger data;
 
         public InterestingQueue(Integer data)
         {
@@ -16,7 +16,7 @@ public class InterestingQueue {
                 
                 // enqueue the numbers 0 through 20
                // for (int i = 0; i < 20; i++) {
-               for (int i = 0; i < 5; i++) {
+               for (int i = 0; i < 20; i++) {
                         tail.next = new InterestingQueue((i * 7) % 20);
                         tail = tail.next;
                 }

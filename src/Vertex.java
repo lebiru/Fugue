@@ -13,6 +13,7 @@ public class Vertex {
 
 	}
 
+
 	public Vertex(int id)
 	{
 		this.id = id;
@@ -23,7 +24,7 @@ public class Vertex {
 		this.id = id;
 		return this;
 	}
-	
+
 	public Vertex(int id, String value)
 	{
 		this.id = id;

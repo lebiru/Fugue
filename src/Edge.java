@@ -11,7 +11,6 @@ public class Edge {
 	int id = 0;
 	String name = "";
 
-
 	public Edge(int id, Vertex source, Vertex destination, String name)
 	{
 		this.source = source;
@@ -75,7 +74,6 @@ public class Edge {
 	public void displayEdge()
 	{
 		System.out.println("Edge: " + this.id + ", Source: " + this.source.value + ", Destination: " + this.destination.value + " Name: " + this.name);
-
 	}
 
 	public void resetEdge()
@@ -83,7 +81,6 @@ public class Edge {
 		this.source = new Vertex();
 		this.destination = new Vertex();
 		this.id = 0;
-
 	}
 
 
