@@ -68,7 +68,7 @@ public class ClickyCanvas extends Canvas {
 			if(y > (height - 250))
 			{
 				y = 50;
-				x = x + 300;
+				x = x + 250;
 			}
 			// If too far to the right, start back at the beginning
 			if(x > (width - 200))
@@ -88,7 +88,7 @@ public class ClickyCanvas extends Canvas {
 				count = 0;
 
 				// draw rectangle for functions
-				visual.drawRect(x, y, 150, 20);
+				visual.drawRect(x, y, 100, 20);
 			}
 			else //object
 			{
@@ -102,7 +102,7 @@ public class ClickyCanvas extends Canvas {
 				}
 				if(changeX == 1) // If it is the first object
 				{
-					x = x + 250;
+					x = x + 200;
 					changeX = 0;
 					count = 1;
 				}
@@ -122,7 +122,7 @@ public class ClickyCanvas extends Canvas {
 					count++;
 				}
 				// draw rounded rectangle for objects
-				visual.drawRoundRect(x, y, 150, 20, 20, 20);
+				visual.drawRoundRect(x, y, 100, 20, 20, 20);
 			}
 			// record coordinates
 			idX.put(i, x);
